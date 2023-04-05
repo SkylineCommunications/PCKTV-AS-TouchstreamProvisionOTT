@@ -1,0 +1,106 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{45134E0B-2308-4B61-8DE6-C531C7AD4751}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{DF9215C5-390A-4DE2-9214-85D6B3C438A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{308FC624-8567-4D23-A7FF-21C15FA4E486}"
+	ProjectSection(SolutionItems) = preProject
+		Dlls\readme.txt = Dlls\readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{E5A9BB97-0AF1-4167-9E98-3C88760797B9}"
+	ProjectSection(SolutionItems) = preProject
+		Documentation\readme.txt = Documentation\readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Analysis", "Code Analysis", "{0CEE930A-F654-4CA6-A137-A6A4EE4A86DC}"
+	ProjectSection(SolutionItems) = preProject
+		Internal\Code Analysis\qaction-debug.ruleset = Internal\Code Analysis\qaction-debug.ruleset
+		Internal\Code Analysis\qaction-release.ruleset = Internal\Code Analysis\qaction-release.ruleset
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Create Touchstream DOM", "Create Touchstream DOM", "{0116F5D7-843B-4F47-B928-BD73F2C3B1C4}"
+	ProjectSection(SolutionItems) = preProject
+		Create Touchstream DOM.xml = Create Touchstream DOM.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{2048A586-BDCB-492A-AEA7-3A48554A4026}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Create Touchstream DOM", "Create Touchstream DOM\Create Touchstream DOM.csproj", "{478C77F6-A2DA-4110-A2D7-F65049E2AAD5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deactivate Touchstream", "Deactivate Touchstream", "{7ADB7BAC-423D-4DAA-9526-A3BCCA0042CB}"
+	ProjectSection(SolutionItems) = preProject
+		Deactivate Touchstream.xml = Deactivate Touchstream.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{DA94C2FB-A3F1-4D99-84EC-0E49F77E40AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deactivate Touchstream", "Deactivate Touchstream\Deactivate Touchstream.csproj", "{DF16114F-28F2-44D0-A389-35B8B30B5AFB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Provision Request", "Build Provision Request", "{485F877B-14C4-4493-8B54-F7C52E3F56AF}"
+	ProjectSection(SolutionItems) = preProject
+		Build Provision Request.xml = Build Provision Request.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{9E0D8A9D-4CF0-4BEE-B4F2-E967B0681329}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Build Provision Request", "Build Provision Request\Build Provision Request.csproj", "{DED2AC94-6717-4CDA-BA71-DA4F5DD2A55E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MediaTailor Processing", "MediaTailor Processing", "{69AA1627-AEE3-472D-864D-843F732C35E4}"
+	ProjectSection(SolutionItems) = preProject
+		MediaTailor Processing.xml = MediaTailor Processing.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{B7526314-5BC0-4ABC-BB5E-441A6BABAC2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaTailor Processing", "MediaTailor Processing\MediaTailor Processing.csproj", "{63642430-B964-439D-AAAB-98843F307142}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{478C77F6-A2DA-4110-A2D7-F65049E2AAD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{478C77F6-A2DA-4110-A2D7-F65049E2AAD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{478C77F6-A2DA-4110-A2D7-F65049E2AAD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{478C77F6-A2DA-4110-A2D7-F65049E2AAD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF16114F-28F2-44D0-A389-35B8B30B5AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF16114F-28F2-44D0-A389-35B8B30B5AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF16114F-28F2-44D0-A389-35B8B30B5AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF16114F-28F2-44D0-A389-35B8B30B5AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DED2AC94-6717-4CDA-BA71-DA4F5DD2A55E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DED2AC94-6717-4CDA-BA71-DA4F5DD2A55E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DED2AC94-6717-4CDA-BA71-DA4F5DD2A55E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DED2AC94-6717-4CDA-BA71-DA4F5DD2A55E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63642430-B964-439D-AAAB-98843F307142}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63642430-B964-439D-AAAB-98843F307142}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63642430-B964-439D-AAAB-98843F307142}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63642430-B964-439D-AAAB-98843F307142}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0CEE930A-F654-4CA6-A137-A6A4EE4A86DC} = {45134E0B-2308-4B61-8DE6-C531C7AD4751}
+		{0116F5D7-843B-4F47-B928-BD73F2C3B1C4} = {DF9215C5-390A-4DE2-9214-85D6B3C438A2}
+		{2048A586-BDCB-492A-AEA7-3A48554A4026} = {0116F5D7-843B-4F47-B928-BD73F2C3B1C4}
+		{478C77F6-A2DA-4110-A2D7-F65049E2AAD5} = {2048A586-BDCB-492A-AEA7-3A48554A4026}
+		{7ADB7BAC-423D-4DAA-9526-A3BCCA0042CB} = {DF9215C5-390A-4DE2-9214-85D6B3C438A2}
+		{DA94C2FB-A3F1-4D99-84EC-0E49F77E40AE} = {7ADB7BAC-423D-4DAA-9526-A3BCCA0042CB}
+		{DF16114F-28F2-44D0-A389-35B8B30B5AFB} = {DA94C2FB-A3F1-4D99-84EC-0E49F77E40AE}
+		{485F877B-14C4-4493-8B54-F7C52E3F56AF} = {DF9215C5-390A-4DE2-9214-85D6B3C438A2}
+		{9E0D8A9D-4CF0-4BEE-B4F2-E967B0681329} = {485F877B-14C4-4493-8B54-F7C52E3F56AF}
+		{DED2AC94-6717-4CDA-BA71-DA4F5DD2A55E} = {9E0D8A9D-4CF0-4BEE-B4F2-E967B0681329}
+		{69AA1627-AEE3-472D-864D-843F732C35E4} = {DF9215C5-390A-4DE2-9214-85D6B3C438A2}
+		{B7526314-5BC0-4ABC-BB5E-441A6BABAC2F} = {69AA1627-AEE3-472D-864D-843F732C35E4}
+		{63642430-B964-439D-AAAB-98843F307142} = {B7526314-5BC0-4ABC-BB5E-441A6BABAC2F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B6F3DEE-C584-4E5A-844F-0083C368CD77}
+	EndGlobalSection
+EndGlobal
