@@ -1,4 +1,3 @@
-C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\bin\Debug\MediaTailor Processing_1.xml
 C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\bin\Debug\MediaTailor Processing_1.dll
 C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\bin\Debug\MediaTailor Processing_1.pdb
 C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\bin\Debug\Newtonsoft.Json.dll
@@ -116,3 +115,4 @@ C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\obj\De
 C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\obj\Debug\MediaTailor Processing.csproj.CopyComplete
 C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\obj\Debug\MediaTailor Processing_1.dll
 C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\obj\Debug\MediaTailor Processing_1.pdb
+C:\GIT\Automation\PCKTV-AS-TouchstreamProvisionOTT\MediaTailor Processing\bin\Debug\MediaTailor Processing.xml
