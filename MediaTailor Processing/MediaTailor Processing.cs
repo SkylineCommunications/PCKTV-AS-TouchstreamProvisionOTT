@@ -101,7 +101,7 @@ namespace Script
 
 				if (mediaTailor.Count == 0)
 				{
-					helper.Log("Activity not executed due to Instance status is not compatible to execute activity.", PaLogLevel.Information);
+					helper.Log($"MediaTailor Activity not executed due to Instance status is not compatible to execute activity.", PaLogLevel.Information);
 					helper.TransitionState("ready_to_inprogress");
 					helper.ReturnSuccess();
 					return;
@@ -162,7 +162,8 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);*/
-					helper.ReturnSuccess();
+					helper.Log("Failed to get all MediaTailor Manifest URLs within the timeout time.", PaLogLevel.Error);
+					helper.SendErrorMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
@@ -198,14 +199,16 @@ namespace Script
 
 				string resultUrl = String.Empty;
 
-				foreach (var section in mediaTailorInstance.Sections)
+				if (mediaTailorInstance.Sections.Count == 0)
 				{
-					section.Stitch(SetSectionDefinitionById);
-
-					var fieldValue = section.FieldValues.Where(field => field.GetFieldDescriptor().Name.Equals("Result URL (MediaTailor)")).First();
-					resultUrl = mediaTailorInstance.GetFieldValue<string>(section.GetSectionDefinition(), fieldValue.GetFieldDescriptor()).Value;
-					break;
+					continue;
 				}
+
+				var section = mediaTailorInstance.Sections.First();
+				section.Stitch(SetSectionDefinitionById);
+
+				var fieldValue = section.FieldValues.First(field => field.GetFieldDescriptor().Name.Equals("Result URL (MediaTailor)"));
+				resultUrl = mediaTailorInstance.GetFieldValue<string>(section.GetSectionDefinition(), fieldValue.GetFieldDescriptor()).Value;
 
 				if (!String.IsNullOrWhiteSpace(resultUrl) && resultUrl != "_" /*default value*/)
 				{

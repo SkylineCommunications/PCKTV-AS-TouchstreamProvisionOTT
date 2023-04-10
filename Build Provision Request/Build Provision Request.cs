@@ -71,6 +71,8 @@ namespace Script
 	/// </summary>
 	public class Script
 	{
+		private readonly int dsprovisionTable = 6400;
+		private readonly int jsonRequestParameter = 20000;
 		private DomHelper innerDomHelper;
 
 		private enum ProvisionIndex
@@ -132,13 +134,13 @@ namespace Script
 				}
 
 				string sValue = JsonConvert.SerializeObject(tsrequest);
-				element.GetStandaloneParameter<string>(20000).SetValue(sValue);
+				element.GetStandaloneParameter<string>(jsonRequestParameter).SetValue(sValue);
 
 				bool CheckTSEventProvisioned()
 				{
 					try
 					{
-						var provisionTable = element.GetTable(6400);
+						var provisionTable = element.GetTable(dsprovisionTable);
 						var tableRows = provisionTable.GetRows();
 
 						foreach (var row in tableRows)
@@ -182,6 +184,7 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);*/
+					helper.Log($"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.", PaLogLevel.Error);
 					helper.SendErrorMessageToTokenHandler();
 				}
 			}

@@ -70,6 +70,8 @@ namespace Script
 	/// </summary>
 	public class Script
 	{
+		private readonly int dsprovisionTable = 6400;
+		private readonly int jsonRequestParameter = 20000;
 		private DomHelper innerDomHelper;
 
 		/// <summary>
@@ -91,6 +93,7 @@ namespace Script
 			{
 				if (!Touchstream.CheckStatus(touchstream.InstanceId, innerDomHelper, new[] { "deactivate", "reprovision" }, out string status))
 				{
+					helper.Log($"Skip Deactivate activity due to status: {status}", PaLogLevel.Information);
 					helper.ReturnSuccess();
 					return;
 				}
@@ -129,16 +132,16 @@ namespace Script
 				};
 
 				string sValue = JsonConvert.SerializeObject(tsrequest);
-				touchstreamElement.GetStandaloneParameter<string>(20000).SetValue(sValue);
+				touchstreamElement.GetStandaloneParameter<string>(jsonRequestParameter).SetValue(sValue);
 
 				var mediaTailorElementName = SendMediaTailorDeleteMessage(dms, touchstream);
-				var tsprovisionTable = touchstreamElement.GetTable(6400);
+				var tsprovisionTable = touchstreamElement.GetTable(dsprovisionTable);
 
 				bool CheckDeactivatedTsEvent()
 				{
 					try
 					{
-						var tsCheck = CheckExistingProvisionRow(tsprovisionTable, touchstream.InstanceId);
+						bool tsCheck = CheckExistingProvisionRow(tsprovisionTable, touchstream.InstanceId);
 						bool mediaTailorCheck = CheckMediaTailorTableRows(dms, touchstream.EventId, mediaTailorElementName);
 
 						return tsCheck && !mediaTailorCheck;
@@ -180,6 +183,7 @@ namespace Script
 							},
 						};
 						exceptionHelper.GenerateLog(log);*/
+						helper.Log($"Failed to execute transition status. Current status: {status}", PaLogLevel.Error);
 						helper.SendErrorMessageToTokenHandler();
 					}
 				}
@@ -200,6 +204,7 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);*/
+					helper.Log("Failed to deactivate TS Event within the timeout time.", PaLogLevel.Error);
 					engine.GenerateInformation("Retry timeout error");
 					helper.SendErrorMessageToTokenHandler();
 				}
@@ -243,14 +248,16 @@ namespace Script
 
 		private bool CheckExistingProvisionRow(IDmsTable dsprovisionTable, string domInstanceId)
 		{
-			var dictionary = new Dictionary<string, object[]>();
 			foreach (var tableRow in dsprovisionTable.GetRows())
 			{
 				var instanceId = Convert.ToString(tableRow[11]); // BookingId/InstanceId
-				dictionary[instanceId] = tableRow;
+				if (instanceId == domInstanceId)
+				{
+					return false;
+				}
 			}
 
-			return !dictionary.ContainsKey(domInstanceId);
+			return true;
 		}
 
 		private string SendMediaTailorDeleteMessage(IDms dms, Touchstream touchstream)
