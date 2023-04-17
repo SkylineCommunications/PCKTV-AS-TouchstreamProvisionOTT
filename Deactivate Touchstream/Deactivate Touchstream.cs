@@ -144,7 +144,7 @@ namespace Script
 						bool tsCheck = CheckExistingProvisionRow(tsprovisionTable, touchstream.InstanceId);
 						bool mediaTailorCheck = CheckMediaTailorTableRows(dms, touchstream.EventId, mediaTailorElementName);
 
-						return tsCheck && !mediaTailorCheck;
+						return tsCheck && mediaTailorCheck;
 					}
 					catch (Exception ex)
 					{
@@ -243,7 +243,7 @@ namespace Script
 
 			var eventsColumn = new ColumnFilter { ComparisonOperator = ComparisonOperator.Equal, Value = eventId, Pid = 1004 };
 			var eventsData = eventsTable.QueryData(new List<ColumnFilter> { eventsColumn });
-			return eventsData.Any();
+			return !eventsData.Any();
 		}
 
 		private bool CheckExistingProvisionRow(IDmsTable dsprovisionTable, string domInstanceId)

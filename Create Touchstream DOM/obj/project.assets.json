@@ -5,27 +5,19 @@
       "Newtonsoft.Json/13.0.2": {
         "type": "package",
         "compile": {
-          "lib/net45/_._": {
-            "related": ".xml"
-          }
+          "lib/net45/_._": {}
         },
         "runtime": {
-          "lib/net45/Newtonsoft.Json.dll": {
-            "related": ".xml"
-          }
+          "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
       "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/net45/_._": {
-            "related": ".pdb;.xml"
-          }
+          "lib/net45/_._": {}
         },
         "runtime": {
-          "lib/net45/ICSharpCode.SharpZipLib.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/net45/ICSharpCode.SharpZipLib.dll": {}
         }
       },
       "Skyline.DataMiner.Dev.Automation/10.3.4": {
@@ -92,27 +84,19 @@
       "Skyline.DataMiner.Files.SLManagedAutomation/10.3.4": {
         "type": "package",
         "compile": {
-          "lib/net462/SLManagedAutomation.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLManagedAutomation.dll": {}
         },
         "runtime": {
-          "lib/net462/SLManagedAutomation.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLManagedAutomation.dll": {}
         }
       },
       "Skyline.DataMiner.Files.SLNetTypes/10.3.4": {
         "type": "package",
         "compile": {
-          "ref/net462/SLNetTypes.dll": {
-            "related": ".xml"
-          }
+          "ref/net462/SLNetTypes.dll": {}
         },
         "runtime": {
-          "lib/net462/SLNetTypes.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLNetTypes.dll": {}
         }
       },
       "Skyline.DataMiner.Files.SLProtoBufLibrary/10.3.4": {
@@ -132,27 +116,19 @@
       "Newtonsoft.Json/13.0.2": {
         "type": "package",
         "compile": {
-          "lib/net45/_._": {
-            "related": ".xml"
-          }
+          "lib/net45/_._": {}
         },
         "runtime": {
-          "lib/net45/Newtonsoft.Json.dll": {
-            "related": ".xml"
-          }
+          "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
       "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/net45/_._": {
-            "related": ".pdb;.xml"
-          }
+          "lib/net45/_._": {}
         },
         "runtime": {
-          "lib/net45/ICSharpCode.SharpZipLib.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/net45/ICSharpCode.SharpZipLib.dll": {}
         }
       },
       "Skyline.DataMiner.Dev.Automation/10.3.4": {
@@ -219,27 +195,19 @@
       "Skyline.DataMiner.Files.SLManagedAutomation/10.3.4": {
         "type": "package",
         "compile": {
-          "lib/net462/SLManagedAutomation.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLManagedAutomation.dll": {}
         },
         "runtime": {
-          "lib/net462/SLManagedAutomation.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLManagedAutomation.dll": {}
         }
       },
       "Skyline.DataMiner.Files.SLNetTypes/10.3.4": {
         "type": "package",
         "compile": {
-          "ref/net462/SLNetTypes.dll": {
-            "related": ".xml"
-          }
+          "ref/net462/SLNetTypes.dll": {}
         },
         "runtime": {
-          "lib/net462/SLNetTypes.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLNetTypes.dll": {}
         }
       },
       "Skyline.DataMiner.Files.SLProtoBufLibrary/10.3.4": {
@@ -259,27 +227,19 @@
       "Newtonsoft.Json/13.0.2": {
         "type": "package",
         "compile": {
-          "lib/net45/_._": {
-            "related": ".xml"
-          }
+          "lib/net45/_._": {}
         },
         "runtime": {
-          "lib/net45/Newtonsoft.Json.dll": {
-            "related": ".xml"
-          }
+          "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
       "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/net45/_._": {
-            "related": ".pdb;.xml"
-          }
+          "lib/net45/_._": {}
         },
         "runtime": {
-          "lib/net45/ICSharpCode.SharpZipLib.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/net45/ICSharpCode.SharpZipLib.dll": {}
         }
       },
       "Skyline.DataMiner.Dev.Automation/10.3.4": {
@@ -346,27 +306,19 @@
       "Skyline.DataMiner.Files.SLManagedAutomation/10.3.4": {
         "type": "package",
         "compile": {
-          "lib/net462/SLManagedAutomation.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLManagedAutomation.dll": {}
         },
         "runtime": {
-          "lib/net462/SLManagedAutomation.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLManagedAutomation.dll": {}
         }
       },
       "Skyline.DataMiner.Files.SLNetTypes/10.3.4": {
         "type": "package",
         "compile": {
-          "ref/net462/SLNetTypes.dll": {
-            "related": ".xml"
-          }
+          "ref/net462/SLNetTypes.dll": {}
         },
         "runtime": {
-          "lib/net462/SLNetTypes.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLNetTypes.dll": {}
         }
       },
       "Skyline.DataMiner.Files.SLProtoBufLibrary/10.3.4": {
@@ -386,27 +338,19 @@
       "Newtonsoft.Json/13.0.2": {
         "type": "package",
         "compile": {
-          "lib/net45/_._": {
-            "related": ".xml"
-          }
+          "lib/net45/_._": {}
         },
         "runtime": {
-          "lib/net45/Newtonsoft.Json.dll": {
-            "related": ".xml"
-          }
+          "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
       "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/net45/_._": {
-            "related": ".pdb;.xml"
-          }
+          "lib/net45/_._": {}
         },
         "runtime": {
-          "lib/net45/ICSharpCode.SharpZipLib.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/net45/ICSharpCode.SharpZipLib.dll": {}
         }
       },
       "Skyline.DataMiner.Dev.Automation/10.3.4": {
@@ -473,27 +417,19 @@
       "Skyline.DataMiner.Files.SLManagedAutomation/10.3.4": {
         "type": "package",
         "compile": {
-          "lib/net462/SLManagedAutomation.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLManagedAutomation.dll": {}
         },
         "runtime": {
-          "lib/net462/SLManagedAutomation.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLManagedAutomation.dll": {}
         }
       },
       "Skyline.DataMiner.Files.SLNetTypes/10.3.4": {
         "type": "package",
         "compile": {
-          "ref/net462/SLNetTypes.dll": {
-            "related": ".xml"
-          }
+          "ref/net462/SLNetTypes.dll": {}
         },
         "runtime": {
-          "lib/net462/SLNetTypes.dll": {
-            "related": ".xml"
-          }
+          "lib/net462/SLNetTypes.dll": {}
         }
       },
       "Skyline.DataMiner.Files.SLProtoBufLibrary/10.3.4": {
@@ -734,27 +670,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\GERMANBS\\.nuget\\packages\\": {}
+    "C:\\Users\\BlakeSM\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\GIT\\Automation\\PCKTV-AS-TouchstreamProvisionOTT\\Create Touchstream DOM\\Create Touchstream DOM.csproj",
+      "projectUniqueName": "C:\\GIT\\GITHUB\\PCKTV-AS_TouchstreamProvisionOTT\\Create Touchstream DOM\\Create Touchstream DOM.csproj",
       "projectName": "Create Touchstream DOM_1",
-      "projectPath": "C:\\GIT\\Automation\\PCKTV-AS-TouchstreamProvisionOTT\\Create Touchstream DOM\\Create Touchstream DOM.csproj",
-      "packagesPath": "C:\\Users\\GERMANBS\\.nuget\\packages\\",
-      "outputPath": "C:\\GIT\\Automation\\PCKTV-AS-TouchstreamProvisionOTT\\Create Touchstream DOM\\obj\\",
+      "projectPath": "C:\\GIT\\GITHUB\\PCKTV-AS_TouchstreamProvisionOTT\\Create Touchstream DOM\\Create Touchstream DOM.csproj",
+      "packagesPath": "C:\\Users\\BlakeSM\\.nuget\\packages\\",
+      "outputPath": "C:\\GIT\\GITHUB\\PCKTV-AS_TouchstreamProvisionOTT\\Create Touchstream DOM\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\GERMANBS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\BlakeSM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net462"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "http://devcore3:81/nuget": {},
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -791,13 +731,5 @@
         "#import": []
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1803",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "You are running the 'restore' operation with an 'HTTP' source, 'http://devcore3:81/nuget'. Non-HTTPS access will be removed in a future version. Consider migrating to an 'HTTPS' source."
-    }
-  ]
+  }
 }
