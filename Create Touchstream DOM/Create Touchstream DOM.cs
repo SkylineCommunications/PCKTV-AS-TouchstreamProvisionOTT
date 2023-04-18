@@ -222,9 +222,9 @@ namespace Script
 				var template = CreateFieldDescriptorObject<string>("Template Name (Touchstream)", "Indicates the Touchstream Template to be used for this provision.");
 				var yospaceHls = CreateFieldDescriptorObject<string>("YoSpace Stream ID HLS (Touchstream)", "Value that will be used in the Manifest URL if YoSpace Monitoring is used.");
 				var yospaceMpd = CreateFieldDescriptorObject<string>("YoSpace Stream ID MPD (Touchstream)", "Value that will be used in the Manifest URL if YoSpace Monitoring is used.");
-				var reducedTemplate = CreateFieldDescriptorObject<DateTime>("Reduced Template (Touchstream)", "Is part of the Ranking Logic and indicates if this stream will be included if the rank bracket is in the Reduced Template mode.");
+				var reducedTemplate = CreateFieldDescriptorObject<string>("Reduced Template (Touchstream)", "Is part of the Ranking Logic and indicates if this stream will be included if the rank bracket is in the Reduced Template mode.");
 				var eventStartDate = CreateFieldDescriptorObject<DateTime>("Event Start Date (Touchstream)", "Date the Provision Starts.");
-				var eventEndDate = CreateFieldDescriptorObject<string>("Event End Date (Touchstream)", "Date the Provision End.");
+				var eventEndDate = CreateFieldDescriptorObject<DateTime>("Event End Date (Touchstream)", "Date the Provision End.");
 				var forcedUpdate = CreateFieldDescriptorObject<string>("Forced Update (Touchstream)", "Prioritizes the processing of this message for such actions as updating Dynamic Groups.");
 				var instanceId = CreateFieldDescriptorObject<string>("InstanceId (Touchstream)", "The id of the DOM instance.");
 				var mediaTailor = CreateDomInstanceFieldDescriptorObject<List<Guid>>("MediaTailor (Touchstream)", "(optional) Links to the MediaTailor Instances for this provision if needed.", mediaTailorDef);
