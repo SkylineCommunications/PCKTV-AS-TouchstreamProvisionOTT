@@ -398,6 +398,7 @@ namespace Script
 					new DomStatusTransition("deactivate_to_deactivating", "deactivate", "deactivating"),
 					new DomStatusTransition("deactivating_to_complete", "deactivating", "complete"),
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
+					new DomStatusTransition("complete_to_ready", "complete", "ready"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("Touchstream Process", "Event Name");
@@ -859,7 +860,7 @@ namespace Script
 							new DomStatusFieldDescriptorLink(fieldsList["InstanceId (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = false,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Dynamic Group (Touchstream)"])
