@@ -230,7 +230,7 @@ namespace Script
 				var mediaTailor = CreateDomInstanceFieldDescriptorObject<List<Guid>>("MediaTailor (Touchstream)", "(optional) Links to the MediaTailor Instances for this provision if needed.", mediaTailorDef);
 				var dynamicGroup = CreateFieldDescriptorObject<string>("Dynamic Group (Touchstream)", "(optional) DynamicGroup to be used for provision events.");
 
-				nameDescriptor = eventLabel.ID;
+				nameDescriptor = eventName.ID;
 
 				List<FieldDescriptor> fieldDescriptors = new List<FieldDescriptor>
 				{
@@ -400,7 +400,7 @@ namespace Script
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
 				};
 
-				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("Touchstream Process", "Event Label");
+				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("Touchstream Process", "Event Name");
 
 				List<IDomButtonDefinition> domButtons = GetBehaviorButtons();
 
@@ -537,7 +537,7 @@ namespace Script
 					ScriptOptions = new List<string>
 					{
 						$"PARAMETER:1:{processName}",
-						"PARAMETER:2:active_to_complete",
+						"PARAMETER:2:active_to_deactivate",
 						$"PARAMETER:3:{businessKeyField}",
 						"PARAMETER:4:deactivate",
 					},
