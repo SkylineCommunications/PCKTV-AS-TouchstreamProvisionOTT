@@ -141,7 +141,7 @@ namespace Script
 
 				if (Touchstream.Retry(CheckMediaTailorResponseUrl, new TimeSpan(0, 5, 0)))
 				{
-					helper.Log($"MediaTailor Manifest URLs {eventName} receivec.", PaLogLevel.Information);
+					helper.Log($"MediaTailor Manifest URLs {eventName} received.", PaLogLevel.Information);
 					helper.TransitionState("ready_to_inprogress");
 					helper.ReturnSuccess();
 				}
