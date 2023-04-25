@@ -54,6 +54,7 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Helper;
 	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
@@ -93,7 +94,7 @@ namespace Script
 			{
 				if (!Touchstream.CheckStatus(touchstream.InstanceId, innerDomHelper, new[] { "deactivate", "reprovision" }, out string status))
 				{
-					helper.Log($"Skip Deactivate activity due to status: {status}", PaLogLevel.Information);
+					engine.GenerateInformation($"Skip Deactivate activity due to status: {status}");
 					helper.ReturnSuccess();
 					return;
 				}
@@ -155,7 +156,10 @@ namespace Script
 
 				if (Touchstream.Retry(CheckDeactivatedTsEvent, new TimeSpan(0, 5, 0)))
 				{
-					helper.Log($"TS Event {touchstream.EventName} deactivated.", PaLogLevel.Information);
+					engine.GenerateInformation($"TS Event {touchstream.EventName} deactivated.");
+
+					touchstream.PerformCallback(engine, helper, innerDomHelper);
+
 					if (status == "deactivating")
 					{
 						helper.TransitionState("deactivating_to_complete");
@@ -183,7 +187,7 @@ namespace Script
 							},
 						};
 						exceptionHelper.GenerateLog(log);*/
-						helper.Log($"Failed to execute transition status. Current status: {status}", PaLogLevel.Error);
+						engine.GenerateInformation($"Failed to execute transition status. Current status: {status}");
 						helper.SendErrorMessageToTokenHandler();
 					}
 				}

@@ -54,6 +54,7 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Helper;
 	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
@@ -165,6 +166,9 @@ namespace Script
 				{
 					helper.Log($"TS Event {touchstream.EventName} provisioned.", PaLogLevel.Information);
 					helper.TransitionState("inprogress_to_active");
+
+					touchstream.PerformCallback(engine, helper, innerDomHelper);
+
 					helper.SendFinishMessageToTokenHandler();
 				}
 				else

@@ -52,6 +52,9 @@
     <Content Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Generic Classes\ExternalRequest.cs">
+      <Link>ExternalRequest.cs</Link>
+    </Compile>
     <Compile Include="..\Generic Classes\MediaTailor.cs">
       <Link>MediaTailor.cs</Link>
     </Compile>
@@ -80,7 +83,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DisLinkId="1" DisProjectType="automationScriptProject" DisLinkedXmlFile="..\Deactivate Touchstream.xml" />
+      <UserProperties DisLinkedXmlFile="..\Deactivate Touchstream.xml" DisProjectType="automationScriptProject" DisLinkId="1" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

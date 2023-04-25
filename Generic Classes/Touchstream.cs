@@ -5,7 +5,9 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Threading;
+    using Helper;
     using Newtonsoft.Json;
+    using Skyline.DataMiner.Automation;
     using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
     using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
     using Skyline.DataMiner.Net.Sections;
@@ -202,6 +204,35 @@
                 YoSpaceMpd = helper.GetParameterValue<string>("YoSpace Stream ID MPD (Touchstream)"),
                 DynamicGroup = helper.TryGetParameterValue("Dynamic Group (Touchstream)", out string dynamicGroup) ? dynamicGroup : String.Empty,
             };
+        }
+
+        public void PerformCallback(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
+        {
+            var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(InstanceId)));
+            var touchstreamInstances = domHelper.DomInstances.Read(filter);
+            var touchstreamInstance = touchstreamInstances.First();
+
+            var sourceElementIds = helper.GetParameterValue<string>("Source Element (Touchstream)");
+            var sourceId = helper.GetParameterValue<string>("Source ID (Touchstream)");
+            if (!string.IsNullOrWhiteSpace(sourceElementIds))
+            {
+                ExternalResponse updateMessage = new ExternalResponse
+                {
+                    Type = "Process Automation",
+                    ProcessResponse = new ProcessResponse
+                    {
+                        EventName = sourceId,
+                        Touchstream = new TouchstreamResponse
+                        {
+                            Status = touchstreamInstance.StatusId == "active" ? "Active" : "Complete",
+                        },
+                    },
+                };
+
+                var elementSplit = sourceElementIds.Split('/');
+                var sourceElement = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
+                sourceElement.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(updateMessage));
+            }
         }
 
         public static bool CheckStatus(string instanceId, DomHelper domHelper, string[] statuses, out string currentStatus)

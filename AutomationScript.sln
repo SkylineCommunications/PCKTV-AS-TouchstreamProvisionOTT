@@ -59,6 +59,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{B752
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaTailor Processing", "MediaTailor Processing\MediaTailor Processing.csproj", "{63642430-B964-439D-AAAB-98843F307142}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generic", "Generic", "{D35F7F55-CA2B-47AC-8680-B2CA1F9F18FC}"
+	ProjectSection(SolutionItems) = preProject
+		Generic Classes\ExternalRequest.cs = Generic Classes\ExternalRequest.cs
+		Generic Classes\MediaTailor.cs = Generic Classes\MediaTailor.cs
+		Generic Classes\Touchstream.cs = Generic Classes\Touchstream.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +106,7 @@ Global
 		{69AA1627-AEE3-472D-864D-843F732C35E4} = {DF9215C5-390A-4DE2-9214-85D6B3C438A2}
 		{B7526314-5BC0-4ABC-BB5E-441A6BABAC2F} = {69AA1627-AEE3-472D-864D-843F732C35E4}
 		{63642430-B964-439D-AAAB-98843F307142} = {B7526314-5BC0-4ABC-BB5E-441A6BABAC2F}
+		{D35F7F55-CA2B-47AC-8680-B2CA1F9F18FC} = {DF9215C5-390A-4DE2-9214-85D6B3C438A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B6F3DEE-C584-4E5A-844F-0083C368CD77}
