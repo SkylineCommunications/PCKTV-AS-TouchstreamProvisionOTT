@@ -52,6 +52,9 @@
     <Content Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Generic Classes\ExternalRequest.cs">
+      <Link>ExternalRequest.cs</Link>
+    </Compile>
     <Compile Include="..\Generic Classes\Touchstream.cs">
       <Link>Touchstream.cs</Link>
     </Compile>
@@ -77,7 +80,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties DisLinkId="1" DisProjectType="automationScriptProject" DisLinkedXmlFile="..\Build Provision Request.xml" />
+      <UserProperties DisLinkedXmlFile="..\Build Provision Request.xml" DisProjectType="automationScriptProject" DisLinkId="1" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

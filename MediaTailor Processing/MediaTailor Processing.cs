@@ -128,7 +128,7 @@ namespace Script
 					try
 					{
 						int totalMediaTailorManifests = mediaTailor.Count;
-						int receivedManifests = CheckReceivedManifest(mediaTailor);
+						int receivedManifests = CheckReceivedManifest(engine, mediaTailor);
 
 						return totalMediaTailorManifests == receivedManifests;
 					}
@@ -141,7 +141,7 @@ namespace Script
 
 				if (Touchstream.Retry(CheckMediaTailorResponseUrl, new TimeSpan(0, 5, 0)))
 				{
-					helper.Log($"MediaTailor Manifest URLs {eventName} receivec.", PaLogLevel.Information);
+					helper.Log($"MediaTailor Manifest URLs {eventName} received.", PaLogLevel.Information);
 					helper.TransitionState("ready_to_inprogress");
 					helper.ReturnSuccess();
 				}
@@ -189,13 +189,20 @@ namespace Script
 			}
 		}
 
-		private int CheckReceivedManifest(List<Guid> mediaTailor)
+		private int CheckReceivedManifest(Engine engine, List<Guid> mediaTailor)
 		{
 			int receivedManifests = 0;
 			foreach (var mediaTailorInstanceId in mediaTailor)
 			{
 				var mediaTailorInstanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(mediaTailorInstanceId));
-				var mediaTailorInstance = innerDomHelper.DomInstances.Read(mediaTailorInstanceFilter).First();
+				var mediaTailorInstances = innerDomHelper.DomInstances.Read(mediaTailorInstanceFilter);
+				if (mediaTailorInstances.Count == 0)
+				{
+					engine.GenerateInformation("MediaTailor DOM Instance not found: " + mediaTailorInstanceId);
+					continue;
+				}
+
+				var mediaTailorInstance = mediaTailorInstances.First();
 
 				string resultUrl = String.Empty;
 

@@ -394,7 +394,7 @@ namespace Script
 					new DomStatusTransition("inprogress_to_active", "in_progress", "active"),
 					new DomStatusTransition("active_to_reprovision", "active", "reprovision"),
 					new DomStatusTransition("active_to_deactivate", "active", "deactivate"),
-					new DomStatusTransition("reprovision_to_inprogress", "reprovision", "in_progress"),
+					new DomStatusTransition("reprovision_to_ready", "reprovision", "ready"),
 					new DomStatusTransition("deactivate_to_deactivating", "deactivate", "deactivating"),
 					new DomStatusTransition("deactivating_to_complete", "deactivating", "complete"),
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
