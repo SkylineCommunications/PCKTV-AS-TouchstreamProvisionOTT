@@ -172,44 +172,45 @@ namespace Script
 					}
 					else
 					{
-						/*var log = new Log
+						var log = new Log
 						{
-							AffectedItem = scriptName,
-							AffectedService = touchstream.EventName,
+							AffectedItem = touchstream.Element,
+							AffectedService = "Touchstream Subprocess",
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
 							{
-								ConfigurationItem = touchstream.EventName,
+								ConfigurationItem = scriptName + "Script",
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Severity = ErrorCode.SeverityType.Major,
-								Source = scriptName,
+								Source = "Status - transition condition",
 								Description = $"Failed to execute transition status. Current status: {status}",
 							},
 						};
-						exceptionHelper.GenerateLog(log);*/
+						exceptionHelper.GenerateLog(log);
 						engine.GenerateInformation($"Failed to execute transition status. Current status: {status}");
 						helper.SendErrorMessageToTokenHandler();
 					}
 				}
 				else
 				{
-					/*var log = new Log
+					helper.Log("Failed to deactivate TS Event within the timeout time.", PaLogLevel.Error);
+					engine.GenerateInformation("Retry timeout error");
+
+					var log = new Log
 					{
-						AffectedItem = scriptName,
-						AffectedService = touchstream.EventName,
+						AffectedItem = touchstream.Element,
+						AffectedService = "Touchstream Subprocess",
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = touchstream.EventName,
+							ConfigurationItem = scriptName + "Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
-							Source = scriptName,
+							Source = "Retry condition",
 							Description = "Failed to deactivate TS Event within the timeout time.",
 						},
 					};
-					exceptionHelper.GenerateLog(log);*/
-					helper.Log("Failed to deactivate TS Event within the timeout time.", PaLogLevel.Error);
-					engine.GenerateInformation("Retry timeout error");
+					exceptionHelper.GenerateLog(log);
 					helper.SendErrorMessageToTokenHandler();
 				}
 			}
@@ -217,20 +218,20 @@ namespace Script
 			{
 				helper.Log($"Failed to deactivate TS Event ({touchstream.EventName}) due to exception: " + ex, PaLogLevel.Error);
 				engine.GenerateInformation($"Failed to deactivate TS Event ({touchstream.EventName}) due to exception: " + ex);
-				/*var log = new Log
+				var log = new Log
 				{
-					AffectedItem = scriptName,
-					AffectedService = touchstream.EventName,
+					AffectedItem = touchstream.Element,
+					AffectedService = "Touchstream Subprocess",
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = touchstream.EventName,
+						ConfigurationItem = scriptName + "Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Major,
-						Source = scriptName,
+						Source = "Run() method - exception",
 					},
 				};
-				exceptionHelper.ProcessException(ex, log);*/
+				exceptionHelper.ProcessException(ex, log);
 				helper.SendErrorMessageToTokenHandler();
 			}
 		}

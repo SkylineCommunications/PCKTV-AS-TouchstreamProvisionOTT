@@ -54,7 +54,6 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using Helper;
 	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
@@ -131,7 +130,7 @@ namespace Script
 
 				if (touchstream.MediaTailor.Count > 0)
 				{
-					tsrequest.Manifests = SetMediaTailorManifests(engine, touchstream.MediaTailor);
+					tsrequest.Manifests = SetMediaTailorManifests(touchstream.MediaTailor);
 				}
 
 				string sValue = JsonConvert.SerializeObject(tsrequest);
@@ -173,21 +172,21 @@ namespace Script
 				}
 				else
 				{
-					/*var log = new Log
+					var log = new Log
 					{
-						AffectedItem = scriptName,
-						AffectedService = touchstream.EventName,
+						AffectedItem = touchstream.Element,
+						AffectedService = "Touchstream Subprocess",
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = touchstream.EventName,
+							ConfigurationItem = scriptName + "Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
-							Source = scriptName,
+							Source = "Retry condition",
 							Description = $"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.",
 						},
 					};
-					exceptionHelper.GenerateLog(log);*/
+					exceptionHelper.GenerateLog(log);
 					helper.Log($"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.", PaLogLevel.Error);
 					helper.SendErrorMessageToTokenHandler();
 				}
@@ -196,26 +195,26 @@ namespace Script
 			{
 				helper.Log($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex, PaLogLevel.Error);
 				engine.GenerateInformation($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex);
-				/*var log = new Log
+				var log = new Log
 				{
-					AffectedItem = scriptName,
-					AffectedService = touchstream.EventName,
+					AffectedItem = touchstream.Element,
+					AffectedService = "Touchstream Subprocess",
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = touchstream.EventName,
+						ConfigurationItem = scriptName + "Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Major,
-						Source = scriptName,
+						Source = "Run() method - exception",
 					},
 				};
-				exceptionHelper.ProcessException(ex, log);*/
+				exceptionHelper.ProcessException(ex, log);
 				helper.SendErrorMessageToTokenHandler();
 				throw;
 			}
 		}
 
-		private List<MediaTailorManifest> SetMediaTailorManifests(Engine engine, List<Guid> mediaTailorInstances)
+		private List<MediaTailorManifest> SetMediaTailorManifests(List<Guid> mediaTailorInstances)
 		{
 			var manifestList = new List<MediaTailorManifest>();
 			foreach (var mediaTailorInstanceId in mediaTailorInstances)

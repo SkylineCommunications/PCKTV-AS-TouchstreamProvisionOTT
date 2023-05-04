@@ -147,21 +147,21 @@ namespace Script
 				}
 				else
 				{
-					/*var log = new Log
+					var log = new Log
 					{
-						AffectedItem = scriptName,
-						AffectedService = eventName,
+						AffectedItem = "MediaTailor",
+						AffectedService = "Touchstream Subprocess",
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = eventName,
+							ConfigurationItem = scriptName + "Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
-							Source = scriptName,
+							Source = "Retry condition",
 							Description = "Failed to get all MediaTailor Manifest URLs within the timeout time.",
 						},
 					};
-					exceptionHelper.GenerateLog(log);*/
+					exceptionHelper.GenerateLog(log);
 					helper.Log("Failed to get all MediaTailor Manifest URLs within the timeout time.", PaLogLevel.Error);
 					helper.SendErrorMessageToTokenHandler();
 				}
@@ -170,20 +170,20 @@ namespace Script
 			{
 				helper.Log($"Failed to get MediaTailor Manifests due to exception: " + ex, PaLogLevel.Error);
 				engine.GenerateInformation($"Failed to get MediaTailor Manifests due to exception: " + ex);
-				/*var log = new Log
+				var log = new Log
 				{
-					AffectedItem = scriptName,
-					AffectedService = eventName,
+					AffectedItem = "MediaTailor",
+					AffectedService = "Touchstream Subprocess",
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = eventName,
+						ConfigurationItem = scriptName + "Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Major,
-						Source = scriptName,
+						Source = "Run() method - exception",
 					},
 				};
-				exceptionHelper.ProcessException(ex, log);*/
+				exceptionHelper.ProcessException(ex, log);
 				helper.SendErrorMessageToTokenHandler();
 				throw;
 			}

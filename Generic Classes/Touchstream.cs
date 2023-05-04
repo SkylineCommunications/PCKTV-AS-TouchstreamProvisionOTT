@@ -206,6 +206,28 @@
             };
         }
 
+        public static bool CheckStatus(string instanceId, DomHelper domHelper, string[] statuses, out string currentStatus)
+        {
+            if (String.IsNullOrWhiteSpace(instanceId))
+            {
+                currentStatus = String.Empty;
+                return false;
+            }
+
+            var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)));
+            var instance = domHelper.DomInstances.Read(instanceFilter).First();
+            var instanceStatus = instance.StatusId;
+            var multiCondition = false;
+
+            foreach (var status in statuses)
+            {
+                multiCondition = multiCondition || instanceStatus.Equals(status);
+            }
+
+            currentStatus = instanceStatus;
+            return multiCondition;
+        }
+
         public void PerformCallback(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
         {
             var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(InstanceId)));
@@ -233,28 +255,6 @@
                 var sourceElement = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
                 sourceElement.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(updateMessage));
             }
-        }
-
-        public static bool CheckStatus(string instanceId, DomHelper domHelper, string[] statuses, out string currentStatus)
-        {
-            if (String.IsNullOrWhiteSpace(instanceId))
-            {
-                currentStatus = String.Empty;
-                return false;
-            }
-
-            var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(instanceId)));
-            var instance = domHelper.DomInstances.Read(instanceFilter).First();
-            var instanceStatus = instance.StatusId;
-            var multiCondition = false;
-
-            foreach (var status in statuses)
-            {
-                multiCondition = multiCondition || instanceStatus.Equals(status);
-            }
-
-            currentStatus = instanceStatus;
-            return multiCondition;
         }
     }
 
