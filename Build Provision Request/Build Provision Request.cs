@@ -122,7 +122,7 @@ namespace Script
 					YoSpaceStreamIdHls = touchstream.YoSpaceHls,
 					YoSpaceStreamIdMpd = touchstream.YoSpaceMpd,
 					EventStartDate = touchstream.StartDate.ToOADate(),
-					EventEndDate = DateTime.Now.ToOADate(),
+					EventEndDate = touchstream.EndDate.ToOADate(),
 					ReducedTemplate = Convert.ToBoolean(touchstream.ReducedTemplate),
 					ForceUpdate = Convert.ToBoolean(touchstream.ForcedUpdate),
 					DynamicGroup = String.IsNullOrWhiteSpace(touchstream.DynamicGroup) ? null : touchstream.DynamicGroup,
