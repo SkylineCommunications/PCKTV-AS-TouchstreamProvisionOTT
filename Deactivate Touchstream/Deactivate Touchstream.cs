@@ -81,9 +81,10 @@ namespace Script
 		/// <param name="engine">Link with SLAutomation process.</param>
 		public void Run(Engine engine)
 		{
-			var scriptName = "Deactivate Touchstream";
-
+			var scriptName = "PA_TS_Deactivate Touchstream";
+			var tseventName = String.Empty;
 			engine.GenerateInformation("START " + scriptName);
+
 			var helper = new PaProfileLoadDomHelper(engine);
 			innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
@@ -174,15 +175,15 @@ namespace Script
 					{
 						var log = new Log
 						{
-							AffectedItem = touchstream.Element,
-							AffectedService = "Touchstream Subprocess",
+							AffectedItem = scriptName,
+							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
 							{
-								ConfigurationItem = scriptName + "Script",
+								ConfigurationItem = scriptName + " Script",
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Severity = ErrorCode.SeverityType.Major,
-								Source = "Status - transition condition",
+								Source = "Status Transition condition",
 								Description = $"Failed to execute transition status. Current status: {status}",
 							},
 						};
@@ -198,12 +199,12 @@ namespace Script
 
 					var log = new Log
 					{
-						AffectedItem = touchstream.Element,
-						AffectedService = "Touchstream Subprocess",
+						AffectedItem = scriptName,
+						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = scriptName + "Script",
+							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
 							Source = "Retry condition",
@@ -220,15 +221,15 @@ namespace Script
 				engine.GenerateInformation($"Failed to deactivate TS Event ({touchstream.EventName}) due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = touchstream.Element,
-					AffectedService = "Touchstream Subprocess",
+					AffectedItem = scriptName,
+					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = scriptName + "Script",
+						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Major,
-						Source = "Run() method - exception",
+						Source = "Run()",
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);

@@ -87,7 +87,8 @@ namespace Script
 		/// <param name="engine">Link with SLAutomation process.</param>
 		public void Run(Engine engine)
 		{
-			var scriptName = "Build Provision Request";
+			var scriptName = "PA_TS_Build Provision Request";
+			var tseventName = String.Empty;
 
 			engine.GenerateInformation("START " + scriptName);
 			var helper = new PaProfileLoadDomHelper(engine);
@@ -127,6 +128,7 @@ namespace Script
 					ForceUpdate = Convert.ToBoolean(touchstream.ForcedUpdate),
 					DynamicGroup = String.IsNullOrWhiteSpace(touchstream.DynamicGroup) ? null : touchstream.DynamicGroup,
 				};
+				tseventName = tsrequest.EventName;
 
 				if (touchstream.MediaTailor.Count > 0)
 				{
@@ -174,12 +176,12 @@ namespace Script
 				{
 					var log = new Log
 					{
-						AffectedItem = touchstream.Element,
-						AffectedService = "Touchstream Subprocess",
+						AffectedItem = scriptName,
+						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = scriptName + "Script",
+							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
 							Source = "Retry condition",
@@ -197,15 +199,15 @@ namespace Script
 				engine.GenerateInformation($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = touchstream.Element,
-					AffectedService = "Touchstream Subprocess",
+					AffectedItem = scriptName,
+					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = scriptName + "Script",
+						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Major,
-						Source = "Run() method - exception",
+						Source = "Run()",
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);

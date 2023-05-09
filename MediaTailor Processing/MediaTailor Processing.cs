@@ -79,7 +79,8 @@ namespace Script
 		/// <param name="engine">Link with SLAutomation process.</param>
 		public void Run(Engine engine)
 		{
-			var scriptName = "MediaTailor Processing";
+			var scriptName = "PA_TS_MediaTailor Processing";
+			var tseventName = String.Empty;
 
 			engine.GenerateInformation("START " + scriptName);
 			var helper = new PaProfileLoadDomHelper(engine);
@@ -98,6 +99,7 @@ namespace Script
 
 				var eventName = helper.GetParameterValue<string>("Event Name (Touchstream)");
 				var mediaTailor = helper.TryGetParameterValue("MediaTailor (Touchstream)", out List<Guid> mediaTailorInstances) ? mediaTailorInstances : new List<Guid>();
+				tseventName = eventName;
 
 				if (mediaTailor.Count == 0)
 				{
@@ -149,12 +151,12 @@ namespace Script
 				{
 					var log = new Log
 					{
-						AffectedItem = "MediaTailor",
-						AffectedService = "Touchstream Subprocess",
+						AffectedItem = scriptName,
+						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
 						ErrorCode = new ErrorCode
 						{
-							ConfigurationItem = scriptName + "Script",
+							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
 							Source = "Retry condition",
@@ -172,15 +174,15 @@ namespace Script
 				engine.GenerateInformation($"Failed to get MediaTailor Manifests due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = "MediaTailor",
-					AffectedService = "Touchstream Subprocess",
+					AffectedItem = scriptName,
+					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
 					{
-						ConfigurationItem = scriptName + "Script",
+						ConfigurationItem = scriptName + " Script",
 						ConfigurationType = ErrorCode.ConfigType.Automation,
 						Severity = ErrorCode.SeverityType.Major,
-						Source = "Run() method - exception",
+						Source = "Run()",
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
