@@ -385,6 +385,8 @@ namespace Script
 					new DomStatus("deactivate", "Deactivate"),
 					new DomStatus("deactivating", "Deactivating"),
 					new DomStatus("complete", "Complete"),
+					new DomStatus("error", "Error"),
+					new DomStatus("active_with_errors", "Active with Errors"),
 				};
 
 				var transitions = new List<DomStatusTransition>
@@ -399,6 +401,14 @@ namespace Script
 					new DomStatusTransition("deactivating_to_complete", "deactivating", "complete"),
 					new DomStatusTransition("complete_to_draft", "complete", "draft"),
 					new DomStatusTransition("complete_to_ready", "complete", "ready"),
+					new DomStatusTransition("inprogress_to_error", "in_progress", "error"),
+					new DomStatusTransition("deactivating_to_error", "deactivating", "error"),
+					new DomStatusTransition("error_to_reprovision", "error", "reprovision"),
+					new DomStatusTransition("error_to_deactivate", "error", "deactivate"),
+					new DomStatusTransition("inprogress_to_activewitherrors", "in_progress", "active_with_errors"),
+					new DomStatusTransition("deactivating_to_activewitherrors", "deactivating", "active_with_errors"),
+					new DomStatusTransition("activewitherrors_to_reprovision", "active_with_errors", "reprovision"),
+					new DomStatusTransition("activewitherrors_to_deactivating", "active_with_errors", "deactivate"),
 				};
 
 				List<IDomActionDefinition> behaviorActions = GetBehaviorActions("Touchstream Process", "Event Name");
@@ -453,8 +463,22 @@ namespace Script
 				var deactivateStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "deactivate");
 				var deactivatingStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "deactivating");
 				var completeStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "complete");
+				var errorStatusLinks = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "error");
+				var activeWithErrorsStatusLinks = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "active_with_errors");
 
-				return new List<DomStatusSectionDefinitionLink> { draftStatusLink, readyStatusLink, inprogressStatusLink, activeStatusLink, reprovisionStatusLink, deactivateStatusLink, deactivatingStatusLink, completeStatusLink };
+				return new List<DomStatusSectionDefinitionLink>
+				{
+					draftStatusLink,
+					readyStatusLink,
+					inprogressStatusLink,
+					activeStatusLink,
+					reprovisionStatusLink,
+					deactivateStatusLink,
+					deactivatingStatusLink,
+					completeStatusLink,
+					errorStatusLinks,
+					activeWithErrorsStatusLinks,
+				};
 			}
 
 			private static List<DomStatusSectionDefinitionLink> GetMediaTailorBehaviorLinks(List<SectionDefinition> sections)
@@ -512,7 +536,46 @@ namespace Script
 					Layout = new DomButtonDefinitionLayout { Text = "Provision" },
 				};
 
-				List<IDomButtonDefinition> domButtons = new List<IDomButtonDefinition> { provisionButton, deactivateButton, reprovisionButton, completeProvision };
+				DomInstanceButtonDefinition errorReprovisionButton = new DomInstanceButtonDefinition("error-reprovision")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "error" }),
+					ActionDefinitionIds = new List<string> { "error-reprovision" },
+					Layout = new DomButtonDefinitionLayout { Text = "Reprovision" },
+				};
+
+				DomInstanceButtonDefinition errorDeactivateButton = new DomInstanceButtonDefinition("error-deactivate")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "error" }),
+					ActionDefinitionIds = new List<string> { "error-deactivate" },
+					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
+				};
+
+				DomInstanceButtonDefinition activeErrorReprovisionButton = new DomInstanceButtonDefinition("activeerror-reprovision")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "active_with_errors" }),
+					ActionDefinitionIds = new List<string> { "activeerror-reprovision" },
+					Layout = new DomButtonDefinitionLayout { Text = "Reprovision" },
+				};
+
+				DomInstanceButtonDefinition activeErrorDeactivateButton = new DomInstanceButtonDefinition("activeerror-deactivate")
+				{
+					VisibilityCondition = new StatusCondition(new List<string> { "active_with_errors" }),
+					ActionDefinitionIds = new List<string> { "activeerror-deactivate" },
+					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
+				};
+
+				List<IDomButtonDefinition> domButtons = new List<IDomButtonDefinition>
+				{
+					provisionButton,
+					deactivateButton,
+					reprovisionButton,
+					completeProvision,
+					errorReprovisionButton,
+					errorDeactivateButton,
+					activeErrorReprovisionButton,
+					activeErrorDeactivateButton,
+				};
+
 				return domButtons;
 			}
 
@@ -570,7 +633,70 @@ namespace Script
 					},
 				};
 
-				var behaviorActions = new List<IDomActionDefinition> { provisionAction, deactivateAction, reprovisionAction, completeProvisionAction, };
+				var errorReprovisionAction = new ExecuteScriptDomActionDefinition("error-reprovision")
+				{
+					Script = "start_process",
+					IsInteractive = false,
+					ScriptOptions = new List<string>
+					{
+						$"PARAMETER:1:{processName}",
+						"PARAMETER:2:error_to_reprovision",
+						$"PARAMETER:3:{businessKeyField}",
+						"PARAMETER:4:error-reprovision",
+					},
+				};
+
+				var errorDeactivateAction = new ExecuteScriptDomActionDefinition("error-deactivate")
+				{
+					Script = "start_process",
+					IsInteractive = false,
+					ScriptOptions = new List<string>
+					{
+						$"PARAMETER:1:{processName}",
+						"PARAMETER:2:error_to_deactivate",
+						$"PARAMETER:3:{businessKeyField}",
+						"PARAMETER:4:error-deactivate",
+					},
+				};
+
+				var activeErrorReprovisionAction = new ExecuteScriptDomActionDefinition("activeerror-reprovision")
+				{
+					Script = "start_process",
+					IsInteractive = false,
+					ScriptOptions = new List<string>
+					{
+						$"PARAMETER:1:{processName}",
+						"PARAMETER:2:activewitherrors_to_reprovision",
+						$"PARAMETER:3:{businessKeyField}",
+						"PARAMETER:4:activeerror-reprovision",
+					},
+				};
+
+				var activeErrorDeactivateAction = new ExecuteScriptDomActionDefinition("activeerror-deactivate")
+				{
+					Script = "start_process",
+					IsInteractive = false,
+					ScriptOptions = new List<string>
+					{
+						$"PARAMETER:1:{processName}",
+						"PARAMETER:2:activewitherrors_to_deactivate",
+						$"PARAMETER:3:{businessKeyField}",
+						"PARAMETER:4:activeerror-deactivate",
+					},
+				};
+
+				var behaviorActions = new List<IDomActionDefinition>
+				{
+					provisionAction,
+					deactivateAction,
+					reprovisionAction,
+					completeProvisionAction,
+					errorReprovisionAction,
+					errorDeactivateAction,
+					activeErrorReprovisionAction,
+					activeErrorDeactivateAction,
+				};
+
 				return behaviorActions;
 			}
 
@@ -654,13 +780,13 @@ namespace Script
 						{
 							new DomStatusFieldDescriptorLink(fieldsList["Source Element (Touchstream)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Source ID (Touchstream)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = false,
 							},
@@ -744,7 +870,7 @@ namespace Script
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["InstanceId (Touchstream)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = false,
 							},
@@ -769,13 +895,13 @@ namespace Script
 						{
 							new DomStatusFieldDescriptorLink(fieldsList["Source Element (Touchstream)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = true,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Source ID (Touchstream)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = true,
 								RequiredForStatus = false,
 							},
@@ -859,7 +985,7 @@ namespace Script
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["InstanceId (Touchstream)"])
 							{
-								Visible = true,
+								Visible = false,
 								ReadOnly = false,
 								RequiredForStatus = true,
 							},
