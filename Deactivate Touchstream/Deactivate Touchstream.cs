@@ -230,6 +230,7 @@ namespace Script
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
 							Source = "Retry condition",
+							Code = "PAErrorState",
 							Description = $"Failed to deactivate {tseventName} within the timeout time.",
 						},
 						SummaryFlag = false,

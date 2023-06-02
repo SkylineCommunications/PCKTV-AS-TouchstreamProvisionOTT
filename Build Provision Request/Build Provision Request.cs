@@ -209,7 +209,7 @@ namespace Script
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Major,
 							Source = "Retry - timeout",
-							Code = "PAActivityFailed",
+							Code = "PAErrorState",
 							Description = $"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.",
 						},
 						SummaryFlag = false,
