@@ -158,7 +158,6 @@ namespace Script
 				if (Touchstream.Retry(CheckDeactivatedTsEvent, new TimeSpan(0, 5, 0)))
 				{
 					engine.GenerateInformation($"TS Event {touchstream.EventName} deactivated.");
-
 					touchstream.PerformCallback(engine, helper, innerDomHelper);
 
 					if (status == "deactivating")
@@ -169,6 +168,29 @@ namespace Script
 					else if (status == "reprovision")
 					{
 						helper.TransitionState("reprovision_to_ready");
+						helper.ReturnSuccess();
+					}
+					else if (status == "active_with_errors")
+					{
+						helper.TransitionState("deactivating_to_activewitherrors");
+						var log = new Log
+						{
+							AffectedItem = scriptName,
+							AffectedService = tseventName,
+							Timestamp = DateTime.Now,
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = scriptName + " Script",
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Severity = ErrorCode.SeverityType.Major,
+								Source = "CheckDeactivatedTsEvent()",
+								Code = "PAActivateWithErrorState",
+								Description = $"Deactivate TS {tseventName} with errors",
+							},
+							SummaryFlag = false,
+						};
+						exceptionHelper.GenerateLog(log);
+						engine.GenerateInformation($"Deactivate TS {tseventName} with errors");
 						helper.ReturnSuccess();
 					}
 					else
@@ -208,10 +230,12 @@ namespace Script
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
 							Source = "Retry condition",
-							Description = "Failed to deactivate TS Event within the timeout time.",
+							Description = $"Failed to deactivate {tseventName} within the timeout time.",
 						},
+						SummaryFlag = false,
 					};
 					exceptionHelper.GenerateLog(log);
+					helper.TransitionState("deactivating_to_error");
 					helper.SendErrorMessageToTokenHandler();
 				}
 			}

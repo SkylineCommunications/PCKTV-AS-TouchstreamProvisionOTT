@@ -150,6 +150,34 @@ namespace Script
 							if (Convert.ToString(row[(int)ProvisionIndex.InstanceId]).Equals(touchstream.InstanceId) &&
 								(Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed") || Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed with Errors")))
 							{
+								if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed"))
+								{
+									helper.Log($"TS Event {touchstream.EventName} provisioned.", PaLogLevel.Information);
+									helper.TransitionState("inprogress_to_active");
+								}
+								else
+								{
+									helper.TransitionState("inprogress_to_activewitherrors");
+
+									var log = new Log
+									{
+										AffectedItem = scriptName,
+										AffectedService = tseventName,
+										Timestamp = DateTime.Now,
+										ErrorCode = new ErrorCode
+										{
+											ConfigurationItem = scriptName + " Script",
+											ConfigurationType = ErrorCode.ConfigType.Automation,
+											Severity = ErrorCode.SeverityType.Major,
+											Source = "CheckTSEventProvisioned()",
+											Code = "PAActiveWithErrorState",
+											Description = $"TS Event ({touchstream.EventName}) provisioned with errors.",
+										},
+										SummaryFlag = false,
+									};
+									exceptionHelper.GenerateLog(log);
+								}
+
 								return true;
 							}
 						}
@@ -165,11 +193,7 @@ namespace Script
 
 				if (Touchstream.Retry(CheckTSEventProvisioned, new TimeSpan(0, 5, 0)))
 				{
-					helper.Log($"TS Event {touchstream.EventName} provisioned.", PaLogLevel.Information);
-					helper.TransitionState("inprogress_to_active");
-
 					touchstream.PerformCallback(engine, helper, innerDomHelper);
-
 					helper.SendFinishMessageToTokenHandler();
 				}
 				else
@@ -183,12 +207,15 @@ namespace Script
 						{
 							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
-							Severity = ErrorCode.SeverityType.Warning,
-							Source = "Retry condition",
+							Severity = ErrorCode.SeverityType.Major,
+							Source = "Retry - timeout",
+							Code = "PAActivityFailed",
 							Description = $"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.",
 						},
+						SummaryFlag = false,
 					};
 					exceptionHelper.GenerateLog(log);
+					helper.TransitionState("inprogress_to_error");
 					helper.Log($"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.", PaLogLevel.Error);
 					helper.SendErrorMessageToTokenHandler();
 				}
