@@ -61,6 +61,7 @@ namespace Script
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 	using Skyline.DataMiner.ExceptionHelper;
+	using Skyline.DataMiner.Net;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
 	using Skyline.DataMiner.Net.Messages.SLDataGateway;
 	using Skyline.DataMiner.Net.Sections;
@@ -147,37 +148,65 @@ namespace Script
 
 						foreach (var row in tableRows)
 						{
-							if (Convert.ToString(row[(int)ProvisionIndex.InstanceId]).Equals(touchstream.InstanceId) &&
-								(Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed") || Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed with Errors")))
+							if (!Convert.ToString(row[(int)ProvisionIndex.InstanceId]).Equals(touchstream.InstanceId))
 							{
-								if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed"))
-								{
-									helper.Log($"TS Event {touchstream.EventName} provisioned.", PaLogLevel.Information);
-									helper.TransitionState("inprogress_to_active");
-								}
-								else
-								{
-									helper.TransitionState("inprogress_to_activewitherrors");
+								continue;
+							}
 
-									var log = new Log
+							if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("In Progress"))
+							{
+								return false;
+							}
+
+							if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed"))
+							{
+								helper.Log($"TS Event {touchstream.EventName} provisioned.", PaLogLevel.Information);
+								helper.TransitionState("inprogress_to_active");
+								return true;
+							}
+							else if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed with Errors"))
+							{
+								helper.TransitionState("inprogress_to_activewitherrors");
+
+								var log = new Log
+								{
+									AffectedItem = scriptName,
+									AffectedService = tseventName,
+									Timestamp = DateTime.Now,
+									ErrorCode = new ErrorCode
 									{
-										AffectedItem = scriptName,
-										AffectedService = tseventName,
-										Timestamp = DateTime.Now,
-										ErrorCode = new ErrorCode
-										{
-											ConfigurationItem = scriptName + " Script",
-											ConfigurationType = ErrorCode.ConfigType.Automation,
-											Severity = ErrorCode.SeverityType.Major,
-											Source = "CheckTSEventProvisioned()",
-											Code = "PAActiveWithErrorState",
-											Description = $"TS Event ({touchstream.EventName}) provisioned with errors.",
-										},
-										SummaryFlag = false,
-									};
-									exceptionHelper.GenerateLog(log);
-								}
-
+										ConfigurationItem = scriptName + " Script",
+										ConfigurationType = ErrorCode.ConfigType.Automation,
+										Severity = ErrorCode.SeverityType.Major,
+										Source = "CheckTSEventProvisioned()",
+										Code = "PAActiveWithErrorState",
+										Description = $"TS Event ({touchstream.EventName}) provisioned with errors.",
+									},
+									SummaryFlag = false,
+								};
+								exceptionHelper.GenerateLog(log);
+								return true;
+							}
+							else
+							{
+								var log = new Log
+								{
+									AffectedItem = scriptName,
+									AffectedService = tseventName,
+									Timestamp = DateTime.Now,
+									ErrorCode = new ErrorCode
+									{
+										ConfigurationItem = scriptName + " Script",
+										ConfigurationType = ErrorCode.ConfigType.Automation,
+										Severity = ErrorCode.SeverityType.Major,
+										Source = "CheckTSEventProvisioned()",
+										Code = "PAErrorState",
+										Description = $"TS Event ({touchstream.EventName}) not provisioned due to template error.",
+									},
+									SummaryFlag = false,
+								};
+								exceptionHelper.GenerateLog(log);
+								helper.TransitionState("inprogress_to_error");
 								return true;
 							}
 						}
