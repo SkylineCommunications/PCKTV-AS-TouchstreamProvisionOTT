@@ -4,14 +4,15 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading;
     using Helper;
     using Newtonsoft.Json;
     using Skyline.DataMiner.Automation;
+    using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Common.Objects.Exceptions;
     using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
     using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
     using Skyline.DataMiner.Net.Sections;
-
     public enum ChannelType
     {
         VL = 1,
@@ -230,44 +231,51 @@
 
         public void PerformCallback(Engine engine, PaProfileLoadDomHelper helper, DomHelper domHelper)
         {
-            var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(InstanceId)));
-            var touchstreamInstances = domHelper.DomInstances.Read(filter);
-            var touchstreamInstance = touchstreamInstances.First();
-
-            var sourceElementIds = helper.GetParameterValue<string>("Source Element (Touchstream)");
-            var sourceId = helper.GetParameterValue<string>("Source ID (Touchstream)");
-            if (!string.IsNullOrWhiteSpace(sourceElementIds))
+            try
             {
-                ExternalResponse updateMessage = new ExternalResponse
-                {
-                    Type = "Process Automation",
-                    ProcessResponse = new ProcessResponse
-                    {
-                        EventName = sourceId,
-                        Touchstream = new TouchstreamResponse
-                        {
-                            Status = touchstreamInstance.StatusId == "active" ? "Active" : "Complete",
-                        },
-                    },
-                };
+                var filter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(InstanceId)));
+                var touchstreamInstances = domHelper.DomInstances.Read(filter);
+                var touchstreamInstance = touchstreamInstances.First();
 
-                var elementSplit = sourceElementIds.Split('/');
-                var sourceElement = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
-                sourceElement.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(updateMessage));
+                var sourceElementIds = helper.GetParameterValue<string>("Source Element (Touchstream)");
+                var sourceId = helper.GetParameterValue<string>("Source ID (Touchstream)");
+                if (!string.IsNullOrWhiteSpace(sourceElementIds))
+                {
+                    ExternalResponse updateMessage = new ExternalResponse
+                    {
+                        Type = "Process Automation",
+                        ProcessResponse = new ProcessResponse
+                        {
+                            EventName = sourceId,
+                            Touchstream = new TouchstreamResponse
+                            {
+                                Status = touchstreamInstance.StatusId == "active" ? "Active" : "Complete",
+                            },
+                        },
+                    };
+
+                    var elementSplit = sourceElementIds.Split('/');
+                    var sourceElement = engine.FindElement(Convert.ToInt32(elementSplit[0]), Convert.ToInt32(elementSplit[1]));
+                    sourceElement.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(updateMessage));
+                }
+            }
+            catch (FieldValueNotFoundException e)
+            {
+                // no action
             }
         }
     }
+}
 
-    public class MediaTailor
-    {
-        public string Element { get; set; }
+public class MediaTailor
+{
+    public string Element { get; set; }
 
-        public string Product { get; set; }
+    public string Product { get; set; }
 
-        public string Cdn { get; set; }
+    public string Cdn { get; set; }
 
-        public string Format { get; set; }
+    public string Format { get; set; }
 
-        public string Payload { get; set; }
-    }
+    public string Payload { get; set; }
 }

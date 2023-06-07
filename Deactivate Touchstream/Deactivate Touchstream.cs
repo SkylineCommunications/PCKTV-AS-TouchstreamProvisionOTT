@@ -170,29 +170,6 @@ namespace Script
 						helper.TransitionState("reprovision_to_ready");
 						helper.ReturnSuccess();
 					}
-					else if (status == "active_with_errors")
-					{
-						helper.TransitionState("deactivating_to_activewitherrors");
-						var log = new Log
-						{
-							AffectedItem = scriptName,
-							AffectedService = tseventName,
-							Timestamp = DateTime.Now,
-							ErrorCode = new ErrorCode
-							{
-								ConfigurationItem = scriptName + " Script",
-								ConfigurationType = ErrorCode.ConfigType.Automation,
-								Severity = ErrorCode.SeverityType.Major,
-								Source = "CheckDeactivatedTsEvent()",
-								Code = "PAActivateWithErrorState",
-								Description = $"Deactivate TS {tseventName} with errors",
-							},
-							SummaryFlag = false,
-						};
-						exceptionHelper.GenerateLog(log);
-						engine.GenerateInformation($"Deactivate TS {tseventName} with errors");
-						helper.ReturnSuccess();
-					}
 					else
 					{
 						var log = new Log
@@ -205,7 +182,8 @@ namespace Script
 								ConfigurationItem = scriptName + " Script",
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Severity = ErrorCode.SeverityType.Major,
-								Source = "Status Transition condition",
+								Source = "CheckDeactivatedTsEvent()",
+								Code = "DeactivationFailedEventUnknownStatus",
 								Description = $"Failed to execute transition status. Current status: {status}",
 							},
 						};
@@ -229,11 +207,10 @@ namespace Script
 							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
-							Source = "Retry condition",
-							Code = "PAErrorState",
+							Source = "Retry()",
+							Code = "RetryTimeout",
 							Description = $"Failed to deactivate {tseventName} within the timeout time.",
 						},
-						SummaryFlag = false,
 					};
 					exceptionHelper.GenerateLog(log);
 					helper.TransitionState("deactivating_to_error");

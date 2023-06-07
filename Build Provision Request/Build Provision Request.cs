@@ -179,10 +179,9 @@ namespace Script
 										ConfigurationType = ErrorCode.ConfigType.Automation,
 										Severity = ErrorCode.SeverityType.Major,
 										Source = "CheckTSEventProvisioned()",
-										Code = "PAActiveWithErrorState",
+										Code = "ProvisionCompletedWithErrors",
 										Description = $"TS Event ({touchstream.EventName}) provisioned with errors.",
 									},
-									SummaryFlag = false,
 								};
 								exceptionHelper.GenerateLog(log);
 								return true;
@@ -200,10 +199,9 @@ namespace Script
 										ConfigurationType = ErrorCode.ConfigType.Automation,
 										Severity = ErrorCode.SeverityType.Major,
 										Source = "CheckTSEventProvisioned()",
-										Code = "PAErrorState",
+										Code = "ProvisionTemplateError",
 										Description = $"TS Event ({touchstream.EventName}) not provisioned due to template error.",
 									},
-									SummaryFlag = false,
 								};
 								exceptionHelper.GenerateLog(log);
 								helper.TransitionState("inprogress_to_error");
@@ -237,11 +235,10 @@ namespace Script
 							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Major,
-							Source = "Retry - timeout",
-							Code = "PAErrorState",
+							Source = "Retry()",
+							Code = "RetryTimeout",
 							Description = $"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.",
 						},
-						SummaryFlag = false,
 					};
 					exceptionHelper.GenerateLog(log);
 					helper.TransitionState("inprogress_to_error");

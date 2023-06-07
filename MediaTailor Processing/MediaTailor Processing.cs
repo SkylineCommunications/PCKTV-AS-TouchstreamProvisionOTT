@@ -159,7 +159,8 @@ namespace Script
 							ConfigurationItem = scriptName + " Script",
 							ConfigurationType = ErrorCode.ConfigType.Automation,
 							Severity = ErrorCode.SeverityType.Warning,
-							Source = "Retry condition",
+							Source = "Retry()",
+							Code = "RetryTimeout",
 							Description = "Failed to get all MediaTailor Manifest URLs within the timeout time.",
 						},
 					};
