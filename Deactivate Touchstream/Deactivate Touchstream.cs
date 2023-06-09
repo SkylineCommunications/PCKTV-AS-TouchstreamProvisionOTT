@@ -84,7 +84,6 @@ namespace Script
 			var scriptName = "PA_TS_Deactivate Touchstream";
 			var tseventName = String.Empty;
 			engine.GenerateInformation("START " + scriptName);
-
 			var helper = new PaProfileLoadDomHelper(engine);
 			innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 
@@ -103,7 +102,7 @@ namespace Script
 				if (status.Equals("deactivate"))
 				{
 					helper.TransitionState("deactivate_to_deactivating");
-
+					engine.GenerateInformation("Transition State 'Deactivate to Deactivating");
 					// need to get instance again after a transition is executed
 					var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(touchstream.InstanceId)));
 					var instance = innerDomHelper.DomInstances.Read(instanceFilter).First();
