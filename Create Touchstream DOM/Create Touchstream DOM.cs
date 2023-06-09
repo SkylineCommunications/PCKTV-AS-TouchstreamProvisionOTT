@@ -641,7 +641,7 @@ namespace Script
 						$"PARAMETER:1:{processName}",
 						"PARAMETER:2:error_to_reprovision",
 						$"PARAMETER:3:{businessKeyField}",
-						"PARAMETER:4:error-reprovision",
+						"PARAMETER:4:reprovision",
 					},
 				};
 
@@ -654,7 +654,7 @@ namespace Script
 						$"PARAMETER:1:{processName}",
 						"PARAMETER:2:error_to_deactivate",
 						$"PARAMETER:3:{businessKeyField}",
-						"PARAMETER:4:error-deactivate",
+						"PARAMETER:4:deactivate",
 					},
 				};
 
