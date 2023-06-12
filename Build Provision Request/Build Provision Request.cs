@@ -243,7 +243,7 @@ namespace Script
 					exceptionHelper.GenerateLog(log);
 					helper.TransitionState("inprogress_to_error");
 					helper.Log($"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.", PaLogLevel.Error);
-					helper.SendErrorMessageToTokenHandler();
+					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
@@ -264,7 +264,7 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				helper.SendErrorMessageToTokenHandler();
+				helper.SendFinishMessageToTokenHandler();
 				throw;
 			}
 		}

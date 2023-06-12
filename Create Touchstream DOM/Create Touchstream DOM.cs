@@ -552,14 +552,14 @@ namespace Script
 				DomInstanceButtonDefinition activeErrorReprovisionButton = new DomInstanceButtonDefinition("activewitherrors-reprovision")
 				{
 					VisibilityCondition = new StatusCondition(new List<string> { "active_with_errors" }),
-					ActionDefinitionIds = new List<string> { "reprovision" },
+					ActionDefinitionIds = new List<string> { "activewitherrors-reprovision" },
 					Layout = new DomButtonDefinitionLayout { Text = "Reprovision" },
 				};
 
 				DomInstanceButtonDefinition activeErrorDeactivateButton = new DomInstanceButtonDefinition("activewitherrors-deactivate")
 				{
 					VisibilityCondition = new StatusCondition(new List<string> { "active_with_errors" }),
-					ActionDefinitionIds = new List<string> { "deactivate" },
+					ActionDefinitionIds = new List<string> { "activewitherrors-deactivate" },
 					Layout = new DomButtonDefinitionLayout { Text = "Deactivate" },
 				};
 

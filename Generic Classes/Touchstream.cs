@@ -239,7 +239,8 @@
 
                 var sourceElementIds = helper.GetParameterValue<string>("Source Element (Touchstream)");
                 var sourceId = helper.GetParameterValue<string>("Source ID (Touchstream)");
-                if (!string.IsNullOrWhiteSpace(sourceElementIds))
+                var instanceStatus = touchstreamInstance.StatusId == "active_with_errors" || touchstreamInstance.StatusId == "error";
+                if (!string.IsNullOrWhiteSpace(sourceElementIds) && !instanceStatus)
                 {
                     ExternalResponse updateMessage = new ExternalResponse
                     {
@@ -259,7 +260,7 @@
                     sourceElement.SetParameter(Convert.ToInt32(elementSplit[2]), JsonConvert.SerializeObject(updateMessage));
                 }
             }
-            catch (FieldValueNotFoundException e)
+            catch (FieldValueNotFoundException)
             {
                 // no action
             }

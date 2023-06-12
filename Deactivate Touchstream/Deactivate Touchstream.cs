@@ -188,7 +188,7 @@ namespace Script
 						};
 						exceptionHelper.GenerateLog(log);
 						engine.GenerateInformation($"Failed to execute transition status. Current status: {status}");
-						helper.SendErrorMessageToTokenHandler();
+						helper.SendFinishMessageToTokenHandler();
 					}
 				}
 				else
@@ -213,7 +213,7 @@ namespace Script
 					};
 					exceptionHelper.GenerateLog(log);
 					helper.TransitionState("deactivating_to_error");
-					helper.SendErrorMessageToTokenHandler();
+					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
@@ -234,7 +234,7 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				helper.SendErrorMessageToTokenHandler();
+				helper.SendFinishMessageToTokenHandler();
 			}
 		}
 
