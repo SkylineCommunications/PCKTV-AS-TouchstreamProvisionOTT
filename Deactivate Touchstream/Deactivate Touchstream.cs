@@ -154,7 +154,7 @@ namespace Script
 					}
 				}
 
-				if (Touchstream.Retry(CheckDeactivatedTsEvent, new TimeSpan(0, 5, 0)))
+				if (Touchstream.Retry(CheckDeactivatedTsEvent, new TimeSpan(0, 2, 0)))
 				{
 					engine.GenerateInformation($"TS Event {touchstream.EventName} deactivated.");
 					touchstream.PerformCallback(engine, helper, innerDomHelper);
@@ -187,6 +187,7 @@ namespace Script
 							},
 						};
 						exceptionHelper.GenerateLog(log);
+						helper.TransitionState("deactivating_to_error");
 						engine.GenerateInformation($"Failed to execute transition status. Current status: {status}");
 						helper.SendFinishMessageToTokenHandler();
 					}
@@ -194,7 +195,6 @@ namespace Script
 				else
 				{
 					helper.Log("Failed to deactivate TS Event within the timeout time.", PaLogLevel.Error);
-					engine.GenerateInformation("Retry timeout error");
 
 					var log = new Log
 					{
@@ -234,6 +234,7 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
+				helper.TransitionState("deactivating_to_error");
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
