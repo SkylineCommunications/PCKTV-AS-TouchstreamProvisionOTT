@@ -154,7 +154,7 @@ namespace Script
 					}
 				}
 
-				if (Touchstream.Retry(CheckDeactivatedTsEvent, new TimeSpan(0, 2, 0)))
+				if (Touchstream.Retry(CheckDeactivatedTsEvent, new TimeSpan(0, 5, 0)))
 				{
 					engine.GenerateInformation($"TS Event {touchstream.EventName} deactivated.");
 					touchstream.PerformCallback(engine, helper, innerDomHelper);
