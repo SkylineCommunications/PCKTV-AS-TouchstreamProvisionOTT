@@ -90,6 +90,7 @@ namespace Script
 			var exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
 			var touchstream = Touchstream.GetDOMData(helper);
 
+			var mainStatus = String.Empty;
 			try
 			{
 				if (!Touchstream.CheckStatus(touchstream.InstanceId, innerDomHelper, new[] { "deactivate", "reprovision" }, out string status))
@@ -99,14 +100,16 @@ namespace Script
 					return;
 				}
 
-				if (status.Equals("deactivate"))
+				mainStatus = status;
+
+				if (mainStatus.Equals("deactivate"))
 				{
 					helper.TransitionState("deactivate_to_deactivating");
 					engine.GenerateInformation("Transition State 'Deactivate to Deactivating");
 					// need to get instance again after a transition is executed
 					var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(touchstream.InstanceId)));
 					var instance = innerDomHelper.DomInstances.Read(instanceFilter).First();
-					status = instance.StatusId;
+					mainStatus = instance.StatusId;
 				}
 
 				IDms dms = engine.GetDms();
@@ -149,7 +152,23 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
-						engine.Log("Exception thrown while checking completed TS event: " + ex);
+						var log = new Log
+						{
+							AffectedItem = scriptName,
+							AffectedService = tseventName,
+							Timestamp = DateTime.Now,
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = scriptName + " Script",
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Severity = ErrorCode.SeverityType.Major,
+								Source = "CheckDeactivatedTsEvent()",
+								Code = "ExceptionThrown",
+								Description = $"Exception thrown while checking completed TS event",
+							},
+						};
+						exceptionHelper.GenerateLog(log);
+						Touchstream.TransitionToError(helper, mainStatus);
 						throw;
 					}
 				}
@@ -159,12 +178,12 @@ namespace Script
 					engine.GenerateInformation($"TS Event {touchstream.EventName} deactivated.");
 					touchstream.PerformCallback(engine, helper, innerDomHelper);
 
-					if (status == "deactivating")
+					if (mainStatus == "deactivating")
 					{
 						helper.TransitionState("deactivating_to_complete");
 						helper.SendFinishMessageToTokenHandler();
 					}
-					else if (status == "reprovision")
+					else if (mainStatus == "reprovision")
 					{
 						helper.TransitionState("reprovision_to_ready");
 						helper.ReturnSuccess();
@@ -183,12 +202,12 @@ namespace Script
 								Severity = ErrorCode.SeverityType.Major,
 								Source = "CheckDeactivatedTsEvent()",
 								Code = "DeactivationFailedEventUnknownStatus",
-								Description = $"Failed to execute transition status. Current status: {status}",
+								Description = $"Failed to execute transition status. Current status: {mainStatus}",
 							},
 						};
 						exceptionHelper.GenerateLog(log);
 						helper.TransitionState("deactivating_to_error");
-						engine.GenerateInformation($"Failed to execute transition status. Current status: {status}");
+						engine.GenerateInformation($"Failed to execute transition status. Current status: {mainStatus}");
 						helper.SendFinishMessageToTokenHandler();
 					}
 				}
@@ -218,7 +237,6 @@ namespace Script
 			}
 			catch (Exception ex)
 			{
-				helper.Log($"Failed to deactivate TS Event ({touchstream.EventName}) due to exception: " + ex, PaLogLevel.Error);
 				engine.GenerateInformation($"Failed to deactivate TS Event ({touchstream.EventName}) due to exception: " + ex);
 				var log = new Log
 				{
@@ -234,7 +252,7 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				helper.TransitionState("deactivating_to_error");
+				Touchstream.TransitionToError(helper,mainStatus);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}

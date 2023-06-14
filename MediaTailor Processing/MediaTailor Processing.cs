@@ -87,16 +87,35 @@ namespace Script
 			innerDomHelper = new DomHelper(engine.SendSLNetMessages, "process_automation");
 			var exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
 
+			var mainStatus = String.Empty;
 			try
 			{
 				var instanceId = helper.TryGetParameterValue("InstanceId (Touchstream)", out string id) ? id : String.Empty;
+
 				if (!Touchstream.CheckStatus(instanceId, innerDomHelper, new[] { "ready" }, out string status))
 				{
-					helper.Log($"Activity not executed due to Instance status is not compatible to execute activity.", PaLogLevel.Error);
-					helper.SendErrorMessageToTokenHandler();
+					var log = new Log
+					{
+						AffectedItem = scriptName,
+						AffectedService = tseventName,
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + " Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Severity = ErrorCode.SeverityType.Major,
+							Source = "Touchstream.CheckStatus()",
+							Code = "CheckStatusReturnedFalse",
+							Description = $"Activity not executed due to Instance status is not compatible to execute activity.",
+						},
+					};
+					exceptionHelper.GenerateLog(log);
+					Touchstream.TransitionToError(helper, status);
+					helper.SendFinishMessageToTokenHandler();
 					return;
 				}
 
+				mainStatus = status;
 				var eventName = helper.GetParameterValue<string>("Event Name (Touchstream)");
 				var mediaTailor = helper.TryGetParameterValue("MediaTailor (Touchstream)", out List<Guid> mediaTailorInstances) ? mediaTailorInstances : new List<Guid>();
 				tseventName = eventName;
@@ -136,7 +155,23 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
-						engine.Log("Exception thrown while checking MediaTailor Manifests: " + ex);
+						var log = new Log
+						{
+							AffectedItem = scriptName,
+							AffectedService = tseventName,
+							Timestamp = DateTime.Now,
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = scriptName + " Script",
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Severity = ErrorCode.SeverityType.Major,
+								Source = "CheckMediaTailorResponseUrl()",
+								Code = "ExceptionThrownOnCheckReceivedManifest()",
+								Description = "Exception thrown while checking MediaTailor Manifests",
+							},
+						};
+						exceptionHelper.GenerateLog(log);
+						Touchstream.TransitionToError(helper, mainStatus);
 						throw;
 					}
 				}
@@ -165,8 +200,8 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					helper.Log("Failed to get all MediaTailor Manifest URLs within the timeout time.", PaLogLevel.Error);
-					helper.SendErrorMessageToTokenHandler();
+					Touchstream.TransitionToError(helper, mainStatus);
+					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
@@ -187,7 +222,8 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				helper.SendErrorMessageToTokenHandler();
+				Touchstream.TransitionToError(helper, mainStatus);
+				helper.SendFinishMessageToTokenHandler();
 				throw;
 			}
 		}

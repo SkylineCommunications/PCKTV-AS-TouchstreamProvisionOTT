@@ -98,14 +98,33 @@ namespace Script
 			var exceptionHelper = new ExceptionHelper(engine, innerDomHelper);
 			var touchstream = Touchstream.GetDOMData(helper);
 
+			var mainStatus = String.Empty;
 			try
 			{
 				if (!Touchstream.CheckStatus(touchstream.InstanceId, innerDomHelper, new[] { "in_progress" }, out string status))
 				{
-					helper.Log($"Activity not executed due to Instance status is not compatible to execute activity.", PaLogLevel.Error);
-					helper.SendErrorMessageToTokenHandler();
+					var log = new Log
+					{
+						AffectedItem = scriptName,
+						AffectedService = tseventName,
+						Timestamp = DateTime.Now,
+						ErrorCode = new ErrorCode
+						{
+							ConfigurationItem = scriptName + " Script",
+							ConfigurationType = ErrorCode.ConfigType.Automation,
+							Severity = ErrorCode.SeverityType.Major,
+							Source = "Touchstream.CheckStatus()",
+							Code = "CheckStatusReturnedFalse",
+							Description = $"Activity not executed due to Instance status is not compatible to execute activity.",
+						},
+					};
+					exceptionHelper.GenerateLog(log);
+					Touchstream.TransitionToError(helper, status);
+					helper.SendFinishMessageToTokenHandler();
 					return;
 				}
+
+				mainStatus = status;
 
 				IDms dms = engine.GetDms();
 				IDmsElement element = dms.GetElement(touchstream.Element);
@@ -213,7 +232,23 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
-						engine.Log("Exception thrown while checking completed TS event: " + ex);
+						var log = new Log
+						{
+							AffectedItem = scriptName,
+							AffectedService = tseventName,
+							Timestamp = DateTime.Now,
+							ErrorCode = new ErrorCode
+							{
+								ConfigurationItem = scriptName + " Script",
+								ConfigurationType = ErrorCode.ConfigType.Automation,
+								Severity = ErrorCode.SeverityType.Major,
+								Source = "CheckTSEventProvisioned()",
+								Code = "ExceptionThrown",
+								Description = $"Exception thrown while checking completed TS event",
+							},
+						};
+						exceptionHelper.GenerateLog(log);
+						Touchstream.TransitionToError(helper, mainStatus);
 						throw;
 					}
 				}
@@ -264,6 +299,7 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
+				Touchstream.TransitionToError(helper, mainStatus);
 				helper.SendFinishMessageToTokenHandler();
 				throw;
 			}
