@@ -103,6 +103,7 @@ namespace Script
 			{
 				if (!Touchstream.CheckStatus(touchstream.InstanceId, innerDomHelper, new[] { "in_progress" }, out string status))
 				{
+					Touchstream.TransitionToError(helper, status);
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -119,7 +120,6 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					Touchstream.TransitionToError(helper, status);
 					helper.SendFinishMessageToTokenHandler();
 					return;
 				}
@@ -232,6 +232,7 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
+						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
 							AffectedItem = scriptName,
@@ -248,7 +249,6 @@ namespace Script
 							},
 						};
 						exceptionHelper.GenerateLog(log);
-						Touchstream.TransitionToError(helper, mainStatus);
 						throw;
 					}
 				}
@@ -283,6 +283,7 @@ namespace Script
 			}
 			catch (Exception ex)
 			{
+				Touchstream.TransitionToError(helper, mainStatus);
 				helper.Log($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex, PaLogLevel.Error);
 				engine.GenerateInformation($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex);
 				var log = new Log
@@ -299,7 +300,6 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				Touchstream.TransitionToError(helper, mainStatus);
 				helper.SendFinishMessageToTokenHandler();
 				throw;
 			}

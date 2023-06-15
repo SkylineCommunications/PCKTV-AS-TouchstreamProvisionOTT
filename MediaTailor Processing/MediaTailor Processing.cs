@@ -94,6 +94,7 @@ namespace Script
 
 				if (!Touchstream.CheckStatus(instanceId, innerDomHelper, new[] { "ready" }, out string status))
 				{
+					Touchstream.TransitionToError(helper, status);
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -110,7 +111,6 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					Touchstream.TransitionToError(helper, status);
 					helper.SendFinishMessageToTokenHandler();
 					return;
 				}
@@ -155,6 +155,7 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
+						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
 							AffectedItem = scriptName,
@@ -171,7 +172,6 @@ namespace Script
 							},
 						};
 						exceptionHelper.GenerateLog(log);
-						Touchstream.TransitionToError(helper, mainStatus);
 						throw;
 					}
 				}
@@ -184,6 +184,7 @@ namespace Script
 				}
 				else
 				{
+					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -200,12 +201,12 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					Touchstream.TransitionToError(helper, mainStatus);
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
 			{
+				Touchstream.TransitionToError(helper, mainStatus);
 				helper.Log($"Failed to get MediaTailor Manifests due to exception: " + ex, PaLogLevel.Error);
 				engine.GenerateInformation($"Failed to get MediaTailor Manifests due to exception: " + ex);
 				var log = new Log
@@ -222,7 +223,6 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				Touchstream.TransitionToError(helper, mainStatus);
 				helper.SendFinishMessageToTokenHandler();
 				throw;
 			}
