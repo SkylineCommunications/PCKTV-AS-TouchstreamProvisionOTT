@@ -105,7 +105,6 @@ namespace Script
 				if (mainStatus.Equals("deactivate"))
 				{
 					helper.TransitionState("deactivate_to_deactivating");
-					engine.GenerateInformation("Transition State 'Deactivate to Deactivating");
 					// need to get instance again after a transition is executed
 					var instanceFilter = DomInstanceExposers.Id.Equal(new DomInstanceId(Guid.Parse(touchstream.InstanceId)));
 					var instance = innerDomHelper.DomInstances.Read(instanceFilter).First();
