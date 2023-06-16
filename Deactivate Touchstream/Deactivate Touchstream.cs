@@ -238,7 +238,8 @@ namespace Script
 			catch (Exception ex)
 			{
 				engine.GenerateInformation($"Failed to deactivate TS Event ({touchstream.EventName}) due to exception: " + ex);
-				Touchstream.TransitionToError(helper, mainStatus);
+				Touchstream.TransitionToError(helper,mainStatus);
+
 				var log = new Log
 				{
 					AffectedItem = scriptName,
