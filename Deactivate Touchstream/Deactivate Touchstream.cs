@@ -152,6 +152,7 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
+						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
 							AffectedItem = scriptName,
@@ -168,7 +169,6 @@ namespace Script
 							},
 						};
 						exceptionHelper.GenerateLog(log);
-						Touchstream.TransitionToError(helper, mainStatus);
 						throw;
 					}
 				}
@@ -238,6 +238,8 @@ namespace Script
 			catch (Exception ex)
 			{
 				engine.GenerateInformation($"Failed to deactivate TS Event ({touchstream.EventName}) due to exception: " + ex);
+				Touchstream.TransitionToError(helper,mainStatus);
+
 				var log = new Log
 				{
 					AffectedItem = scriptName,
@@ -252,7 +254,6 @@ namespace Script
 					},
 				};
 				exceptionHelper.ProcessException(ex, log);
-				Touchstream.TransitionToError(helper,mainStatus);
 				helper.SendFinishMessageToTokenHandler();
 			}
 		}
