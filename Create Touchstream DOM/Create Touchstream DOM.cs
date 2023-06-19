@@ -455,15 +455,15 @@ namespace Script
 				Dictionary<string, FieldDescriptorID> fieldsList = GetFieldDescriptorDictionary(sections.First());
 
 				var draftStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLinkDraft(sections.First(), fieldsList);
-				var readyStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "ready");
-				var inprogressStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "in_progress");
-				var activeStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "active");
-				var reprovisionStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "reprovision");
-				var deactivateStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "deactivate");
-				var deactivatingStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "deactivating");
-				var completeStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "complete");
-				var errorStatusLinks = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "error");
-				var activeWithErrorsStatusLinks = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "active_with_errors");
+				var readyStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "ready", true);
+				var inprogressStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "in_progress", true);
+				var activeStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "active", true);
+				var reprovisionStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "reprovision", true);
+				var deactivateStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "deactivate", true);
+				var deactivatingStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "deactivating", true);
+				var completeStatusLink = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "complete", false);
+				var errorStatusLinks = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "error", false);
+				var activeWithErrorsStatusLinks = StatusSectionDefinitions.GetTouchstreamSectionDefinitionLink(sections.First(), fieldsList, "active_with_errors", false);
 
 				return new List<DomStatusSectionDefinitionLink>
 				{
@@ -885,7 +885,7 @@ namespace Script
 					return draftStatusLinkDomInstance;
 				}
 
-				public static DomStatusSectionDefinitionLink GetTouchstreamSectionDefinitionLink(SectionDefinition section, Dictionary<string, FieldDescriptorID> fieldsList, string status)
+				public static DomStatusSectionDefinitionLink GetTouchstreamSectionDefinitionLink(SectionDefinition section, Dictionary<string, FieldDescriptorID> fieldsList, string status, bool readOnly)
 				{
 					var sectionStatusLinkId = new DomStatusSectionDefinitionLinkId(status, section.GetID());
 					DomStatusSectionDefinitionLink draftStatusLinkDomInstance = new DomStatusSectionDefinitionLink(sectionStatusLinkId)
@@ -895,85 +895,85 @@ namespace Script
 							new DomStatusFieldDescriptorLink(fieldsList["Source Element (Touchstream)"])
 							{
 								Visible = false,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Source ID (Touchstream)"])
 							{
 								Visible = false,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Touchstream Element (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Asset ID (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Event ID (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Event Label (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Event Name (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Template Name (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["YoSpace Stream ID HLS (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["YoSpace Stream ID MPD (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Reduced Template (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Event Start Date (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Event End Date (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = false,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["Forced Update (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = true,
 							},
 							new DomStatusFieldDescriptorLink(fieldsList["MediaTailor (Touchstream)"])
@@ -991,7 +991,7 @@ namespace Script
 							new DomStatusFieldDescriptorLink(fieldsList["Dynamic Group (Touchstream)"])
 							{
 								Visible = true,
-								ReadOnly = true,
+								ReadOnly = readOnly,
 								RequiredForStatus = false,
 							},
 						},
