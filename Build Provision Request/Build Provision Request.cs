@@ -177,6 +177,11 @@ namespace Script
 								return false;
 							}
 
+							if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Not Provisioned"))
+							{
+								return false;
+							}
+
 							if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed"))
 							{
 								helper.Log($"TS Event {touchstream.EventName} provisioned.", PaLogLevel.Information);
@@ -207,6 +212,7 @@ namespace Script
 							}
 							else
 							{
+								Touchstream.TransitionToError(helper, mainStatus);
 								var log = new Log
 								{
 									AffectedItem = scriptName,
@@ -223,7 +229,6 @@ namespace Script
 									},
 								};
 								exceptionHelper.GenerateLog(log);
-								helper.TransitionState("inprogress_to_error");
 								return true;
 							}
 						}
@@ -260,6 +265,7 @@ namespace Script
 				}
 				else
 				{
+					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -276,7 +282,6 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					helper.TransitionState("inprogress_to_error");
 					helper.Log($"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.", PaLogLevel.Error);
 					helper.SendFinishMessageToTokenHandler();
 				}
