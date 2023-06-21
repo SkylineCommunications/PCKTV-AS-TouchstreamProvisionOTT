@@ -165,19 +165,9 @@ namespace Script
 						var provisionTable = element.GetTable(dsprovisionTable);
 						var tableRows = provisionTable.GetRows();
 
-						foreach (var row in tableRows)
+						foreach (var row in tableRows.Where(x => x[(int)ProvisionIndex.InstanceId].Equals(touchstream.InstanceId)))
 						{
-							if (!Convert.ToString(row[(int)ProvisionIndex.InstanceId]).Equals(touchstream.InstanceId))
-							{
-								continue;
-							}
-
-							if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("In Progress"))
-							{
-								return false;
-							}
-
-							if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Not Provisioned"))
+							if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("In Progress") || Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Not Provisioned"))
 							{
 								return false;
 							}

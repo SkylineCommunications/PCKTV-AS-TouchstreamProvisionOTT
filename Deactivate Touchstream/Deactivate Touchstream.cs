@@ -189,6 +189,7 @@ namespace Script
 					}
 					else
 					{
+						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
 							AffectedItem = scriptName,
@@ -205,7 +206,6 @@ namespace Script
 							},
 						};
 						exceptionHelper.GenerateLog(log);
-						helper.TransitionState("deactivating_to_error");
 						engine.GenerateInformation($"Failed to execute transition status. Current status: {mainStatus}");
 						helper.SendFinishMessageToTokenHandler();
 					}
@@ -213,7 +213,7 @@ namespace Script
 				else
 				{
 					helper.Log("Failed to deactivate TS Event within the timeout time.", PaLogLevel.Error);
-
+					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
 						AffectedItem = scriptName,
@@ -230,7 +230,6 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					helper.TransitionState("deactivating_to_error");
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
