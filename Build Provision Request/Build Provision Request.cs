@@ -244,7 +244,7 @@ namespace Script
 							},
 						};
 						exceptionHelper.GenerateLog(log);
-						throw;
+						return true;
 					}
 				}
 
