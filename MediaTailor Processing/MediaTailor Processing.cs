@@ -54,6 +54,7 @@ namespace Script
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading;
 	using Newtonsoft.Json;
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
@@ -72,6 +73,7 @@ namespace Script
 	public class Script
 	{
 		private DomHelper innerDomHelper;
+		private IDmsElement element;
 
 		/// <summary>
 		/// The script entry point.
@@ -140,8 +142,8 @@ namespace Script
 					};
 
 					var value = JsonConvert.SerializeObject(mediaTailorRequest);
-					IDmsElement element = dms.GetElement(pair.Key);
-					element.GetStandaloneParameter<string>(20).SetValue(value);
+					this.element = dms.GetElement(pair.Key);
+					this.element.GetStandaloneParameter<string>(20).SetValue(value);
 				}
 
 				bool CheckMediaTailorResponseUrl()
@@ -158,7 +160,7 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = scriptName,
+							AffectedItem = this.element.Name,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
@@ -167,12 +169,10 @@ namespace Script
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Severity = ErrorCode.SeverityType.Major,
 								Source = "CheckMediaTailorResponseUrl()",
-								Code = "ExceptionThrownOnCheckReceivedManifest()",
-								Description = "Exception thrown while checking MediaTailor Manifests",
 							},
 						};
-						exceptionHelper.GenerateLog(log);
-						throw;
+						exceptionHelper.ProcessException(ex, log);
+						return true;
 					}
 				}
 
@@ -187,9 +187,10 @@ namespace Script
 					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = this.element.Name,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
+						LogNotes = "Failed to get all MediaTailor Manifest URLs within the timeout time.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -197,7 +198,7 @@ namespace Script
 							Severity = ErrorCode.SeverityType.Warning,
 							Source = "Retry()",
 							Code = "RetryTimeout",
-							Description = "Failed to get all MediaTailor Manifest URLs within the timeout time.",
+							Description = "Failed to finish PA activity within the timeout time.",
 						},
 					};
 					exceptionHelper.GenerateLog(log);
@@ -211,7 +212,7 @@ namespace Script
 				engine.GenerateInformation($"Failed to get MediaTailor Manifests due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = this.element.Name,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode

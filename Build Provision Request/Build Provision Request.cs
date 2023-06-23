@@ -75,6 +75,7 @@ namespace Script
 		private readonly int dsprovisionTable = 6400;
 		private readonly int jsonRequestParameter = 20000;
 		private DomHelper innerDomHelper;
+		private IDmsElement element;
 
 		private enum ProvisionIndex
 		{
@@ -127,7 +128,7 @@ namespace Script
 				mainStatus = status;
 
 				IDms dms = engine.GetDms();
-				IDmsElement element = dms.GetElement(touchstream.Element);
+				this.element = dms.GetElement(touchstream.Element);
 
 				TouchstreamRequest tsrequest = new TouchstreamRequest
 				{
@@ -156,13 +157,13 @@ namespace Script
 				}
 
 				string sValue = JsonConvert.SerializeObject(tsrequest);
-				element.GetStandaloneParameter<string>(jsonRequestParameter).SetValue(sValue);
+				this.element.GetStandaloneParameter<string>(jsonRequestParameter).SetValue(sValue);
 
 				bool CheckTSEventProvisioned()
 				{
 					try
 					{
-						var provisionTable = element.GetTable(dsprovisionTable);
+						var provisionTable = this.element.GetTable(dsprovisionTable);
 						var tableRows = provisionTable.GetRows();
 
 						foreach (var row in tableRows.Where(x => x[(int)ProvisionIndex.InstanceId].Equals(touchstream.InstanceId)))
@@ -184,9 +185,10 @@ namespace Script
 
 								var log = new Log
 								{
-									AffectedItem = scriptName,
+									AffectedItem = this.element.Name,
 									AffectedService = tseventName,
 									Timestamp = DateTime.Now,
+									LogNotes = $"TS Event ({touchstream.EventName}) were provisioned with errors.",
 									ErrorCode = new ErrorCode
 									{
 										ConfigurationItem = scriptName + " Script",
@@ -194,7 +196,7 @@ namespace Script
 										Severity = ErrorCode.SeverityType.Major,
 										Source = "CheckTSEventProvisioned()",
 										Code = "ProvisionCompletedWithErrors",
-										Description = $"TS Event ({touchstream.EventName}) provisioned with errors.",
+										Description = $"TS Event provisioned with errors.",
 									},
 								};
 								exceptionHelper.GenerateLog(log);
@@ -205,9 +207,10 @@ namespace Script
 								Touchstream.TransitionToError(helper, mainStatus);
 								var log = new Log
 								{
-									AffectedItem = scriptName,
+									AffectedItem = this.element.Name,
 									AffectedService = tseventName,
 									Timestamp = DateTime.Now,
+									LogNotes = $"TS Event ({touchstream.EventName}) not provisioned due to template error. Template name: {touchstream.TemplateName}",
 									ErrorCode = new ErrorCode
 									{
 										ConfigurationItem = scriptName + " Script",
@@ -215,7 +218,7 @@ namespace Script
 										Severity = ErrorCode.SeverityType.Major,
 										Source = "CheckTSEventProvisioned()",
 										Code = "ProvisionTemplateError",
-										Description = $"TS Event ({touchstream.EventName}) not provisioned due to template error.",
+										Description = $"TS Event not provisioned due to template error.",
 									},
 								};
 								exceptionHelper.GenerateLog(log);
@@ -230,7 +233,7 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = scriptName,
+							AffectedItem = this.element.Name,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
@@ -239,11 +242,9 @@ namespace Script
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Severity = ErrorCode.SeverityType.Major,
 								Source = "CheckTSEventProvisioned()",
-								Code = "ExceptionThrown",
-								Description = $"Exception thrown while checking completed TS event",
 							},
 						};
-						exceptionHelper.GenerateLog(log);
+						exceptionHelper.ProcessException(ex, log);
 						return true;
 					}
 				}
@@ -258,9 +259,10 @@ namespace Script
 					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = this.element.Name,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -268,7 +270,7 @@ namespace Script
 							Severity = ErrorCode.SeverityType.Major,
 							Source = "Retry()",
 							Code = "RetryTimeout",
-							Description = $"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.",
+							Description = "Failed to finish PA activity within the timeout time.",
 						},
 					};
 					exceptionHelper.GenerateLog(log);
@@ -283,7 +285,7 @@ namespace Script
 				engine.GenerateInformation($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = this.element.Name,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode

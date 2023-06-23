@@ -74,6 +74,7 @@ namespace Script
 		private readonly int dsprovisionTable = 6400;
 		private readonly int jsonRequestParameter = 20000;
 		private DomHelper innerDomHelper;
+		private IDmsElement element;
 
 		/// <summary>
 		/// The Script entry point.
@@ -112,7 +113,7 @@ namespace Script
 				}
 
 				IDms dms = engine.GetDms();
-				IDmsElement touchstreamElement = dms.GetElement(touchstream.Element);
+				element = dms.GetElement(touchstream.Element);
 
 				TouchstreamRequest tsrequest = new TouchstreamRequest
 				{
@@ -135,10 +136,10 @@ namespace Script
 				};
 
 				string sValue = JsonConvert.SerializeObject(tsrequest);
-				touchstreamElement.GetStandaloneParameter<string>(jsonRequestParameter).SetValue(sValue);
+				element.GetStandaloneParameter<string>(jsonRequestParameter).SetValue(sValue);
 
 				var mediaTailorElementName = SendMediaTailorDeleteMessage(dms, touchstream);
-				var tsprovisionTable = touchstreamElement.GetTable(dsprovisionTable);
+				var tsprovisionTable = element.GetTable(dsprovisionTable);
 
 				bool CheckDeactivatedTsEvent()
 				{
@@ -154,7 +155,7 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = scriptName,
+							AffectedItem = element.Name,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
@@ -163,12 +164,10 @@ namespace Script
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Severity = ErrorCode.SeverityType.Major,
 								Source = "CheckDeactivatedTsEvent()",
-								Code = "ExceptionThrown",
-								Description = $"Exception thrown while checking completed TS event",
 							},
 						};
-						exceptionHelper.GenerateLog(log);
-						throw;
+						exceptionHelper.ProcessException(ex, log);
+						return true;
 					}
 				}
 
@@ -192,9 +191,10 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = scriptName,
+							AffectedItem = element.Name,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
+							LogNotes = $"Failed to execute transition status on event {tseventName}. Current status: {mainStatus}",
 							ErrorCode = new ErrorCode
 							{
 								ConfigurationItem = scriptName + " Script",
@@ -202,7 +202,7 @@ namespace Script
 								Severity = ErrorCode.SeverityType.Major,
 								Source = "CheckDeactivatedTsEvent()",
 								Code = "DeactivationFailedEventUnknownStatus",
-								Description = $"Failed to execute transition status. Current status: {mainStatus}",
+								Description = $"Failed to execute transition status.",
 							},
 						};
 						exceptionHelper.GenerateLog(log);
@@ -216,9 +216,10 @@ namespace Script
 					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = element.Name,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"Failed to deactivate {tseventName} within the timeout time.",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -226,7 +227,7 @@ namespace Script
 							Severity = ErrorCode.SeverityType.Warning,
 							Source = "Retry()",
 							Code = "RetryTimeout",
-							Description = $"Failed to deactivate {tseventName} within the timeout time.",
+							Description = "Failed to finish PA activity within the timeout time.",
 						},
 					};
 					exceptionHelper.GenerateLog(log);
@@ -240,7 +241,7 @@ namespace Script
 
 				var log = new Log
 				{
-					AffectedItem = scriptName,
+					AffectedItem = element.Name,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
