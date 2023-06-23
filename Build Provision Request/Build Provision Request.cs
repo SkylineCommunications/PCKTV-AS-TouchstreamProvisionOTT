@@ -128,7 +128,7 @@ namespace Script
 				mainStatus = status;
 
 				IDms dms = engine.GetDms();
-				this.element = dms.GetElement(touchstream.Element);
+				element = dms.GetElement(touchstream.Element);
 
 				TouchstreamRequest tsrequest = new TouchstreamRequest
 				{
@@ -157,13 +157,13 @@ namespace Script
 				}
 
 				string sValue = JsonConvert.SerializeObject(tsrequest);
-				this.element.GetStandaloneParameter<string>(jsonRequestParameter).SetValue(sValue);
+				element.GetStandaloneParameter<string>(jsonRequestParameter).SetValue(sValue);
 
 				bool CheckTSEventProvisioned()
 				{
 					try
 					{
-						var provisionTable = this.element.GetTable(dsprovisionTable);
+						var provisionTable = element.GetTable(dsprovisionTable);
 						var tableRows = provisionTable.GetRows();
 
 						foreach (var row in tableRows.Where(x => x[(int)ProvisionIndex.InstanceId].Equals(touchstream.InstanceId)))
@@ -185,7 +185,7 @@ namespace Script
 
 								var log = new Log
 								{
-									AffectedItem = this.element.Name,
+									AffectedItem = element.Name,
 									AffectedService = tseventName,
 									Timestamp = DateTime.Now,
 									LogNotes = $"TS Event ({touchstream.EventName}) were provisioned with errors.",
@@ -207,7 +207,7 @@ namespace Script
 								Touchstream.TransitionToError(helper, mainStatus);
 								var log = new Log
 								{
-									AffectedItem = this.element.Name,
+									AffectedItem = element.Name,
 									AffectedService = tseventName,
 									Timestamp = DateTime.Now,
 									LogNotes = $"TS Event ({touchstream.EventName}) not provisioned due to template error. Template name: {touchstream.TemplateName}",
@@ -233,7 +233,7 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = this.element.Name,
+							AffectedItem = element.Name,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
@@ -259,7 +259,7 @@ namespace Script
 					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
-						AffectedItem = this.element.Name,
+						AffectedItem = element.Name,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
 						LogNotes = $"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.",
@@ -285,7 +285,7 @@ namespace Script
 				engine.GenerateInformation($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = this.element.Name,
+					AffectedItem = element.Name,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode

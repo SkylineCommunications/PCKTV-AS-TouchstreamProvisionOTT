@@ -142,8 +142,8 @@ namespace Script
 					};
 
 					var value = JsonConvert.SerializeObject(mediaTailorRequest);
-					this.element = dms.GetElement(pair.Key);
-					this.element.GetStandaloneParameter<string>(20).SetValue(value);
+					element = dms.GetElement(pair.Key);
+					element.GetStandaloneParameter<string>(20).SetValue(value);
 				}
 
 				bool CheckMediaTailorResponseUrl()
@@ -160,7 +160,7 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = this.element.Name,
+							AffectedItem = element.Name,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
@@ -187,7 +187,7 @@ namespace Script
 					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
-						AffectedItem = this.element.Name,
+						AffectedItem = element.Name,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
 						LogNotes = "Failed to get all MediaTailor Manifest URLs within the timeout time.",
@@ -212,7 +212,7 @@ namespace Script
 				engine.GenerateInformation($"Failed to get MediaTailor Manifests due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = this.element.Name,
+					AffectedItem = element.Name,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
 					ErrorCode = new ErrorCode
