@@ -110,6 +110,7 @@ namespace Script
 						AffectedItem = scriptName,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"Activity not executed due to Instance status is not compatible to execute activity. Status: {status}",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -117,7 +118,7 @@ namespace Script
 							Severity = ErrorCode.SeverityType.Major,
 							Source = "Touchstream.CheckStatus()",
 							Code = "CheckStatusReturnedFalse",
-							Description = $"Activity not executed due to Instance status is not compatible to execute activity.",
+							Description = "Activity not executed.",
 						},
 					};
 					exceptionHelper.GenerateLog(log);
@@ -196,7 +197,7 @@ namespace Script
 										Severity = ErrorCode.SeverityType.Major,
 										Source = "CheckTSEventProvisioned()",
 										Code = "ProvisionCompletedWithErrors",
-										Description = $"TS Event provisioned with errors.",
+										Description = $"Event provisioned with errors.",
 									},
 								};
 								exceptionHelper.GenerateLog(log);
@@ -236,6 +237,7 @@ namespace Script
 							AffectedItem = element.Name,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
+							LogNotes = ex.ToString(),
 							ErrorCode = new ErrorCode
 							{
 								ConfigurationItem = scriptName + " Script",
@@ -288,6 +290,7 @@ namespace Script
 					AffectedItem = element.Name,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
+					LogNotes = $"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex,
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",

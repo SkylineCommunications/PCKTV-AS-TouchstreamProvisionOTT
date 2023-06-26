@@ -244,6 +244,7 @@ namespace Script
 					AffectedItem = element.Name,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
+					LogNotes = ex.ToString(),
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",

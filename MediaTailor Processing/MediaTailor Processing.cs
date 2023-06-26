@@ -102,6 +102,7 @@ namespace Script
 						AffectedItem = scriptName,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
+						LogNotes = $"Activity not executed due to Instance status is not compatible to execute activity. Status: {status}",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -109,7 +110,7 @@ namespace Script
 							Severity = ErrorCode.SeverityType.Major,
 							Source = "Touchstream.CheckStatus()",
 							Code = "CheckStatusReturnedFalse",
-							Description = $"Activity not executed due to Instance status is not compatible to execute activity.",
+							Description = $"Activity not executed.",
 						},
 					};
 					exceptionHelper.GenerateLog(log);
@@ -215,6 +216,7 @@ namespace Script
 					AffectedItem = element.Name,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
+					LogNotes = "Failed to get MediaTailor Manifests due to exception: " + ex,
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
