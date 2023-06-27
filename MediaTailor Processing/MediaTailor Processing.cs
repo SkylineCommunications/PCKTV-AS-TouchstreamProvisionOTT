@@ -73,7 +73,7 @@ namespace Script
 	public class Script
 	{
 		private DomHelper innerDomHelper;
-		private IDmsElement element;
+		private string touchstreamElement;
 
 		/// <summary>
 		/// The script entry point.
@@ -93,16 +93,17 @@ namespace Script
 			try
 			{
 				var instanceId = helper.TryGetParameterValue("InstanceId (Touchstream)", out string id) ? id : String.Empty;
+				touchstreamElement = helper.GetParameterValue<string>("Touchstream Element (Touchstream)");
 
 				if (!Touchstream.CheckStatus(instanceId, innerDomHelper, new[] { "ready" }, out string status))
 				{
 					Touchstream.TransitionToError(helper, status);
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = touchstreamElement,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
-						LogNotes = $"Activity not executed due to Instance status is not compatible to execute activity. Status: {status}",
+						LogNotes = $"Activity not executed due to Instance status is not compatible to execute activity. Expected status: 'ready'. Current status: '{status}'",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -125,7 +126,7 @@ namespace Script
 
 				if (mediaTailor.Count == 0)
 				{
-					helper.Log($"MediaTailor Activity not executed due to Instance status is not compatible to execute activity.", PaLogLevel.Information);
+					engine.Log($"MediaTailor Activity not executed due to Instance status is not compatible to execute activity.");
 					helper.TransitionState("ready_to_inprogress");
 					helper.ReturnSuccess();
 					return;
@@ -143,7 +144,7 @@ namespace Script
 					};
 
 					var value = JsonConvert.SerializeObject(mediaTailorRequest);
-					element = dms.GetElement(pair.Key);
+					var element = dms.GetElement(pair.Key);
 					element.GetStandaloneParameter<string>(20).SetValue(value);
 				}
 
@@ -161,7 +162,7 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = element.Name,
+							AffectedItem = touchstreamElement,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
 							ErrorCode = new ErrorCode
@@ -179,7 +180,6 @@ namespace Script
 
 				if (Touchstream.Retry(CheckMediaTailorResponseUrl, new TimeSpan(0, 5, 0)))
 				{
-					helper.Log($"MediaTailor Manifest URLs {eventName} received.", PaLogLevel.Information);
 					helper.TransitionState("ready_to_inprogress");
 					helper.ReturnSuccess();
 				}
@@ -188,7 +188,7 @@ namespace Script
 					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
-						AffectedItem = element.Name,
+						AffectedItem = touchstreamElement,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
 						LogNotes = "Failed to get all MediaTailor Manifest URLs within the timeout time.",
@@ -209,14 +209,13 @@ namespace Script
 			catch (Exception ex)
 			{
 				Touchstream.TransitionToError(helper, mainStatus);
-				helper.Log($"Failed to get MediaTailor Manifests due to exception: " + ex, PaLogLevel.Error);
 				engine.GenerateInformation($"Failed to get MediaTailor Manifests due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = element.Name,
+					AffectedItem = touchstreamElement,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
-					LogNotes = "Failed to get MediaTailor Manifests due to exception: " + ex,
+					LogNotes = $"Failed to get MediaTailor Manifests due to exception: {ex}",
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",

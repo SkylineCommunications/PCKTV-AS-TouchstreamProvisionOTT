@@ -75,7 +75,6 @@ namespace Script
 		private readonly int dsprovisionTable = 6400;
 		private readonly int jsonRequestParameter = 20000;
 		private DomHelper innerDomHelper;
-		private IDmsElement element;
 
 		private enum ProvisionIndex
 		{
@@ -107,10 +106,10 @@ namespace Script
 					Touchstream.TransitionToError(helper, status);
 					var log = new Log
 					{
-						AffectedItem = scriptName,
+						AffectedItem = touchstream.Element,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
-						LogNotes = $"Activity not executed due to Instance status is not compatible to execute activity. Status: {status}",
+						LogNotes = $"Activity not executed due to Instance status is not compatible to execute activity. Expected status: 'in progress'. Current Status: '{status}'",
 						ErrorCode = new ErrorCode
 						{
 							ConfigurationItem = scriptName + " Script",
@@ -129,7 +128,7 @@ namespace Script
 				mainStatus = status;
 
 				IDms dms = engine.GetDms();
-				element = dms.GetElement(touchstream.Element);
+				var element = dms.GetElement(touchstream.Element);
 
 				TouchstreamRequest tsrequest = new TouchstreamRequest
 				{
@@ -186,7 +185,7 @@ namespace Script
 
 								var log = new Log
 								{
-									AffectedItem = element.Name,
+									AffectedItem = touchstream.Element,
 									AffectedService = tseventName,
 									Timestamp = DateTime.Now,
 									LogNotes = $"TS Event ({touchstream.EventName}) were provisioned with errors.",
@@ -208,7 +207,7 @@ namespace Script
 								Touchstream.TransitionToError(helper, mainStatus);
 								var log = new Log
 								{
-									AffectedItem = element.Name,
+									AffectedItem = touchstream.Element,
 									AffectedService = tseventName,
 									Timestamp = DateTime.Now,
 									LogNotes = $"TS Event ({touchstream.EventName}) not provisioned due to template error. Template name: {touchstream.TemplateName}",
@@ -219,7 +218,7 @@ namespace Script
 										Severity = ErrorCode.SeverityType.Major,
 										Source = "CheckTSEventProvisioned()",
 										Code = "ProvisionTemplateError",
-										Description = $"TS Event not provisioned due to template error.",
+										Description = $"Event not provisioned due to template error.",
 									},
 								};
 								exceptionHelper.GenerateLog(log);
@@ -234,10 +233,10 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = element.Name,
+							AffectedItem = touchstream.Element,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
-							LogNotes = ex.ToString(),
+							LogNotes = $"Error while checking TS Event result. Exception: {ex}",
 							ErrorCode = new ErrorCode
 							{
 								ConfigurationItem = scriptName + " Script",
@@ -261,7 +260,7 @@ namespace Script
 					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
-						AffectedItem = element.Name,
+						AffectedItem = touchstream.Element,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
 						LogNotes = $"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.",
@@ -276,21 +275,19 @@ namespace Script
 						},
 					};
 					exceptionHelper.GenerateLog(log);
-					helper.Log($"Failed to provision TS Event ({touchstream.EventName}) within the timeout time.", PaLogLevel.Error);
 					helper.SendFinishMessageToTokenHandler();
 				}
 			}
 			catch (Exception ex)
 			{
 				Touchstream.TransitionToError(helper, mainStatus);
-				helper.Log($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex, PaLogLevel.Error);
 				engine.GenerateInformation($"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex);
 				var log = new Log
 				{
-					AffectedItem = element.Name,
+					AffectedItem = touchstream.Element,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
-					LogNotes = $"Failed to provision TS Event ({touchstream.EventName}) due to exception: " + ex,
+					LogNotes = $"Error while executing script. Exception: {ex}",
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",

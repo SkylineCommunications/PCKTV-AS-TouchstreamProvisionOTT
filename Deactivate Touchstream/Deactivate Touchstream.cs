@@ -59,7 +59,6 @@ namespace Script
 	using Skyline.DataMiner.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Automation;
 	using Skyline.DataMiner.Core.DataMinerSystem.Common;
-	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Helpers.Logging;
 	using Skyline.DataMiner.DataMinerSolutions.ProcessAutomation.Manager;
 	using Skyline.DataMiner.ExceptionHelper;
 	using Skyline.DataMiner.Net.Apps.DataMinerObjectModel;
@@ -74,7 +73,6 @@ namespace Script
 		private readonly int dsprovisionTable = 6400;
 		private readonly int jsonRequestParameter = 20000;
 		private DomHelper innerDomHelper;
-		private IDmsElement element;
 
 		/// <summary>
 		/// The Script entry point.
@@ -113,7 +111,7 @@ namespace Script
 				}
 
 				IDms dms = engine.GetDms();
-				element = dms.GetElement(touchstream.Element);
+				var element = dms.GetElement(touchstream.Element);
 
 				TouchstreamRequest tsrequest = new TouchstreamRequest
 				{
@@ -155,9 +153,10 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = element.Name,
+							AffectedItem = touchstream.Element,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
+							LogNotes = $"Error while check TS deactivation. Exception: {ex}",
 							ErrorCode = new ErrorCode
 							{
 								ConfigurationItem = scriptName + " Script",
@@ -191,18 +190,18 @@ namespace Script
 						Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
-							AffectedItem = element.Name,
+							AffectedItem = touchstream.Element,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
-							LogNotes = $"Failed to execute transition status on event {tseventName}. Current status: {mainStatus}",
+							LogNotes = $"Failed to execute transition status on event {tseventName}. Expected statuses: 'deactivating/reprovision'. Current status: {mainStatus}",
 							ErrorCode = new ErrorCode
 							{
 								ConfigurationItem = scriptName + " Script",
 								ConfigurationType = ErrorCode.ConfigType.Automation,
 								Severity = ErrorCode.SeverityType.Major,
-								Source = "CheckDeactivatedTsEvent()",
-								Code = "DeactivationFailedEventUnknownStatus",
-								Description = $"Failed to execute transition status.",
+								Source = "Status transition conditions",
+								Code = "InvalidStatusForTransition",
+								Description = "Cannot execute the transition as the current status is unexpected.",
 							},
 						};
 						exceptionHelper.GenerateLog(log);
@@ -212,11 +211,10 @@ namespace Script
 				}
 				else
 				{
-					helper.Log("Failed to deactivate TS Event within the timeout time.", PaLogLevel.Error);
 					Touchstream.TransitionToError(helper, mainStatus);
 					var log = new Log
 					{
-						AffectedItem = element.Name,
+						AffectedItem = touchstream.Element,
 						AffectedService = tseventName,
 						Timestamp = DateTime.Now,
 						LogNotes = $"Failed to deactivate {tseventName} within the timeout time.",
@@ -236,15 +234,14 @@ namespace Script
 			}
 			catch (Exception ex)
 			{
-				engine.GenerateInformation($"Failed to deactivate TS Event ({touchstream.EventName}) due to exception: " + ex);
+				engine.GenerateInformation($"Error while executing script due to exception: {ex}");
 				Touchstream.TransitionToError(helper,mainStatus);
-
 				var log = new Log
 				{
-					AffectedItem = element.Name,
+					AffectedItem = touchstream.Element,
 					AffectedService = tseventName,
 					Timestamp = DateTime.Now,
-					LogNotes = ex.ToString(),
+					LogNotes = $"Error while executing script. Exception: {ex}",
 					ErrorCode = new ErrorCode
 					{
 						ConfigurationItem = scriptName + " Script",
@@ -273,7 +270,7 @@ namespace Script
 			return !eventsData.Any();
 		}
 
-		private bool CheckExistingProvisionRow(IDmsTable dsprovisionTable, string domInstanceId)
+		private static bool CheckExistingProvisionRow(IDmsTable dsprovisionTable, string domInstanceId)
 		{
 			foreach (var tableRow in dsprovisionTable.GetRows())
 			{
