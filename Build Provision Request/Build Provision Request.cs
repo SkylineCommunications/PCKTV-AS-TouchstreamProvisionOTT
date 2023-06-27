@@ -230,7 +230,9 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
-						Touchstream.TransitionToError(helper, mainStatus);
+						engine.GenerateInformation($"Error while checking TS Event result. Exception: {ex}");
+						throw;
+						/*Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
 							AffectedItem = touchstream.Element,
@@ -245,8 +247,7 @@ namespace Script
 								Source = "CheckTSEventProvisioned()",
 							},
 						};
-						exceptionHelper.ProcessException(ex, log);
-						return true;
+						exceptionHelper.ProcessException(ex, log);*/
 					}
 				}
 

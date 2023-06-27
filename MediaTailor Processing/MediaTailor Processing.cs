@@ -159,12 +159,15 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
-						Touchstream.TransitionToError(helper, mainStatus);
+						engine.GenerateInformation($"Error while checking MediaTailor response. Exception: {ex}");
+						throw;
+						/*Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
 							AffectedItem = touchstreamElement,
 							AffectedService = tseventName,
 							Timestamp = DateTime.Now,
+							LogNotes = $"Error while checking MediaTailor response. Exception: {ex}",
 							ErrorCode = new ErrorCode
 							{
 								ConfigurationItem = scriptName + " Script",
@@ -174,7 +177,7 @@ namespace Script
 							},
 						};
 						exceptionHelper.ProcessException(ex, log);
-						return true;
+						return true;*/
 					}
 				}
 

@@ -150,7 +150,9 @@ namespace Script
 					}
 					catch (Exception ex)
 					{
-						Touchstream.TransitionToError(helper, mainStatus);
+						engine.GenerateInformation($"Error while check TS deactivation. Exception: {ex}");
+						throw;
+						/*Touchstream.TransitionToError(helper, mainStatus);
 						var log = new Log
 						{
 							AffectedItem = touchstream.Element,
@@ -166,7 +168,7 @@ namespace Script
 							},
 						};
 						exceptionHelper.ProcessException(ex, log);
-						return true;
+						return true;*/
 					}
 				}
 
