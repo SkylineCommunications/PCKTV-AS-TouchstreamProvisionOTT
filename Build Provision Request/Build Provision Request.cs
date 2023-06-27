@@ -175,7 +175,7 @@ namespace Script
 
 							if (Convert.ToString(row[(int)ProvisionIndex.Result]).Equals("Completed"))
 							{
-								helper.Log($"TS Event {touchstream.EventName} provisioned.", PaLogLevel.Information);
+								engine.GenerateInformation($"TS Event {touchstream.EventName} provisioned.");
 								helper.TransitionState("inprogress_to_active");
 								return true;
 							}
